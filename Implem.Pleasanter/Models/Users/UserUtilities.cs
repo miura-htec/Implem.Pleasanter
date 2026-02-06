@@ -581,6 +581,24 @@ namespace Implem.Pleasanter.Models
                                     value: string.Empty,
                                     tabIndex: tabIndex,
                                     serverScriptModelColumn: serverScriptModelColumn);
+                    case "NameKana":
+                        return ss.ReadColumnAccessControls.Allowed(
+                            context: context,
+                            ss: ss,
+                            column: column,
+                            mine: mine)
+                                ? hb.Td(
+                                    context: context,
+                                    column: column,
+                                    value: userModel.NameKana,
+                                    tabIndex: tabIndex,
+                                    serverScriptModelColumn: serverScriptModelColumn)
+                                : hb.Td(
+                                    context: context,
+                                    column: column,
+                                    value: string.Empty,
+                                    tabIndex: tabIndex,
+                                    serverScriptModelColumn: serverScriptModelColumn);
                     case "UserCode":
                         return ss.ReadColumnAccessControls.Allowed(
                             context: context,
@@ -1372,6 +1390,9 @@ namespace Implem.Pleasanter.Models
                     case "Name": value = userModel.Name.GridText(
                         context: context,
                         column: column); break;
+                    case "NameKana": value = userModel.NameKana.GridText(
+                        context: context,
+                        column: column); break;
                     case "UserCode": value = userModel.UserCode.GridText(
                         context: context,
                         column: column); break;
@@ -1829,6 +1850,12 @@ namespace Implem.Pleasanter.Models
                             column: column);
                 case "Name":
                     return userModel.Name
+                        .ToControl(
+                            context: context,
+                            ss: ss,
+                            column: column);
+                case "NameKana":
+                    return userModel.NameKana
                         .ToControl(
                             context: context,
                             ss: ss,
@@ -2340,6 +2367,12 @@ namespace Implem.Pleasanter.Models
                                 res.Val(
                                     target: "#Users_Name" + idSuffix,
                                     value: userModel.Name.ToResponse(context: context, ss: ss, column: column),
+                                    options: column.ResponseValOptions(serverScriptModelColumn: serverScriptModelColumn));
+                                break;
+                            case "NameKana":
+                                res.Val(
+                                    target: "#Users_NameKana" + idSuffix,
+                                    value: userModel.NameKana.ToResponse(context: context, ss: ss, column: column),
                                     options: column.ResponseValOptions(serverScriptModelColumn: serverScriptModelColumn));
                                 break;
                             case "UserCode":
@@ -3720,6 +3753,9 @@ namespace Implem.Pleasanter.Models
                             break;
                         case "Name":
                             userModel.Name = recordingData.ToString();
+                            break;
+                        case "NameKana":
+                            userModel.NameKana = recordingData.ToString();
                             break;
                         case "UserCode":
                             userModel.UserCode = recordingData.ToString();

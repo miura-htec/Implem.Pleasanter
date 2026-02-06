@@ -3013,6 +3013,12 @@ namespace Implem.Pleasanter.Libraries.DataSources
                                 orderType: orderType,
                                 isNullValue: isNullValue,
                                 function: function);
+                        case "NameKana":
+                            return self.Registrations_NameKana(
+                                tableName: column.TableName(),
+                                orderType: orderType,
+                                isNullValue: isNullValue,
+                                function: function);
                         case "Password":
                             return self.Registrations_Password(
                                 tableName: column.TableName(),
@@ -4030,6 +4036,12 @@ namespace Implem.Pleasanter.Libraries.DataSources
                                 function: function);
                         case "Name":
                             return self.Users_Name(
+                                tableName: column.TableName(),
+                                orderType: orderType,
+                                isNullValue: isNullValue,
+                                function: function);
+                        case "NameKana":
+                            return self.Users_NameKana(
                                 tableName: column.TableName(),
                                 orderType: orderType,
                                 isNullValue: isNullValue,
@@ -12015,6 +12027,7 @@ namespace Implem.Pleasanter.Libraries.DataSources
             column.InviteeName(function: Sqls.Functions.SingleColumn); param.InviteeName();
             column.LoginId(function: Sqls.Functions.SingleColumn); param.LoginId();
             column.Name(function: Sqls.Functions.SingleColumn); param.Name();
+            column.NameKana(function: Sqls.Functions.SingleColumn); param.NameKana();
             column.Password(function: Sqls.Functions.SingleColumn); param.Password();
             column.Language(function: Sqls.Functions.SingleColumn); param.Language();
             column.Passphrase(function: Sqls.Functions.SingleColumn); param.Passphrase();
@@ -12246,6 +12259,7 @@ namespace Implem.Pleasanter.Libraries.DataSources
             column.LoginId(function: Sqls.Functions.SingleColumn); param.LoginId();
             column.GlobalId(function: Sqls.Functions.SingleColumn); param.GlobalId();
             column.Name(function: Sqls.Functions.SingleColumn); param.Name();
+            column.NameKana(function: Sqls.Functions.SingleColumn); param.NameKana();
             column.UserCode(function: Sqls.Functions.SingleColumn); param.UserCode();
             column.Password(function: Sqls.Functions.SingleColumn); param.Password();
             column.LastName(function: Sqls.Functions.SingleColumn); param.LastName();
@@ -61497,6 +61511,46 @@ namespace Implem.Pleasanter.Libraries.DataSources
                 : self;
         }
 
+        public static RegistrationsColumnCollection NameKana(
+            this RegistrationsColumnCollection self,
+            string tableName = "Registrations",
+            string columnName = "NameKana",
+            string _as = null,
+            Sqls.Functions function = Sqls.Functions.None,
+            SqlStatement sub = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBracket: "\"NameKana\"",
+                    tableName: tableName,
+                    columnName: columnName,
+                    _as: _as,
+                    function: function,
+                    sub: sub)
+                : self;
+        }
+
+        public static SqlColumnCollection Registrations_NameKana(
+            this SqlColumnCollection self,
+            string tableName = "Registrations",
+            string columnName = "NameKana",
+            string _as = null,
+            Sqls.Functions function = Sqls.Functions.None,
+            SqlStatement sub = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBracket: "\"NameKana\"",
+                    tableName: tableName,
+                    columnName: columnName,
+                    _as: _as,
+                    function: function,
+                    sub: sub)
+                : self;
+        }
+
         public static RegistrationsColumnCollection Password(
             this RegistrationsColumnCollection self,
             string tableName = "Registrations",
@@ -62441,6 +62495,64 @@ namespace Implem.Pleasanter.Libraries.DataSources
                     columnBrackets: new string[] { "\"Name\"" },
                     tableName: tableName,
                     name: "Name",
+                    value: value,
+                    _operator: _operator,
+                    multiColumnOperator: multiColumnOperator,
+                    multiParamOperator: multiParamOperator,
+                    subLeft: subLeft,
+                    sub: sub,
+                    subPrefix: subPrefix,
+                    raw: raw)
+                : self;
+        }
+
+        public static RegistrationsWhereCollection NameKana(
+            this RegistrationsWhereCollection self,
+            object value = null,
+            string tableName = "Registrations",
+            string _operator = "=",
+            string multiColumnOperator = " or ",
+            string multiParamOperator = " and ",
+            SqlStatement subLeft = null,
+            SqlStatement sub = null,
+            bool subPrefix = true,
+            string raw = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBrackets: new string[] { "\"NameKana\"" },
+                    tableName: tableName,
+                    name: "NameKana",
+                    value: value,
+                    _operator: _operator,
+                    multiColumnOperator: multiColumnOperator,
+                    multiParamOperator: multiParamOperator,
+                    subLeft: subLeft,
+                    sub: sub,
+                    subPrefix: subPrefix,
+                    raw: raw)
+                : self;
+        }
+
+        public static SqlWhereCollection Registrations_NameKana(
+            this SqlWhereCollection self,
+            object value = null,
+            string tableName = "Registrations",
+            string _operator = "=",
+            string multiColumnOperator = " or ",
+            string multiParamOperator = " and ",
+            SqlStatement subLeft = null,
+            SqlStatement sub = null,
+            bool subPrefix = true,
+            string raw = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBrackets: new string[] { "\"NameKana\"" },
+                    tableName: tableName,
+                    name: "NameKana",
                     value: value,
                     _operator: _operator,
                     multiColumnOperator: multiColumnOperator,
@@ -63892,6 +64004,7 @@ namespace Implem.Pleasanter.Libraries.DataSources
                     case "InviteeName": return self.InviteeName();
                     case "LoginId": return self.LoginId();
                     case "Name": return self.Name();
+                    case "NameKana": return self.NameKana();
                     case "Password": return self.Password();
                     case "Language": return self.Language();
                     case "Passphrase": return self.Passphrase();
@@ -64010,6 +64123,18 @@ namespace Implem.Pleasanter.Libraries.DataSources
             this SqlGroupByCollection self, string tableName = "Registrations")
         {
             return self.Add(columnBracket: "\"Name\"", tableName: tableName);
+        }
+
+        public static RegistrationsGroupByCollection NameKana(
+            this RegistrationsGroupByCollection self, string tableName = "Registrations")
+        {
+            return self.Add(columnBracket: "\"NameKana\"", tableName: tableName);
+        }
+
+        public static SqlGroupByCollection Registrations_NameKana(
+            this SqlGroupByCollection self, string tableName = "Registrations")
+        {
+            return self.Add(columnBracket: "\"NameKana\"", tableName: tableName);
         }
 
         public static RegistrationsGroupByCollection Password(
@@ -64327,6 +64452,23 @@ namespace Implem.Pleasanter.Libraries.DataSources
             Sqls.Functions function = Sqls.Functions.None)
         {
             new List<string> { "\"Name\"" }.ForEach(columnBracket =>
+                self.Add(
+                    columnBracket: columnBracket,
+                    orderType: orderType,
+                    tableName: tableName,
+                    isNullValue: isNullValue,
+                    function: function));
+            return self;
+        }
+
+        public static RegistrationsOrderByCollection NameKana(
+            this RegistrationsOrderByCollection self,
+            SqlOrderBy.Types orderType = SqlOrderBy.Types.asc,
+            string tableName = "Registrations",
+            string isNullValue = null,
+            Sqls.Functions function = Sqls.Functions.None)
+        {
+            new List<string> { "\"NameKana\"" }.ForEach(columnBracket =>
                 self.Add(
                     columnBracket: columnBracket,
                     orderType: orderType,
@@ -64667,6 +64809,23 @@ namespace Implem.Pleasanter.Libraries.DataSources
             Sqls.Functions function = Sqls.Functions.None)
         {
             new List<string> { "\"Name\"" }.ForEach(columnBracket =>
+                self.Add(
+                    columnBracket: columnBracket,
+                    orderType: orderType,
+                    tableName: tableName,
+                    isNullValue: isNullValue,
+                    function: function));
+            return self;
+        }
+
+        public static SqlOrderByCollection Registrations_NameKana(
+            this SqlOrderByCollection self,
+            SqlOrderBy.Types orderType = SqlOrderBy.Types.asc,
+            string tableName = "Registrations",
+            string isNullValue = null,
+            Sqls.Functions function = Sqls.Functions.None)
+        {
+            new List<string> { "\"NameKana\"" }.ForEach(columnBracket =>
                 self.Add(
                     columnBracket: columnBracket,
                     orderType: orderType,
@@ -65156,6 +65315,40 @@ namespace Implem.Pleasanter.Libraries.DataSources
                 ? self.Add(
                     columnBracket: "\"Name\"",
                     name: "Name",
+                    value: value,
+                    sub: sub,
+                    raw: raw)
+                : self;
+        }
+
+        public static RegistrationsParamCollection NameKana(
+            this RegistrationsParamCollection self,
+            object value = null,
+            SqlStatement sub = null,
+            string raw = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBracket: "\"NameKana\"",
+                    name: "NameKana",
+                    value: value,
+                    sub: sub,
+                    raw: raw)
+                : self;
+        }
+
+        public static SqlParamCollection Registrations_NameKana(
+            this SqlParamCollection self,
+            object value = null,
+            SqlStatement sub = null,
+            string raw = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBracket: "\"NameKana\"",
+                    name: "NameKana",
                     value: value,
                     sub: sub,
                     raw: raw)
@@ -96360,6 +96553,46 @@ namespace Implem.Pleasanter.Libraries.DataSources
                 : self;
         }
 
+        public static UsersColumnCollection NameKana(
+            this UsersColumnCollection self,
+            string tableName = "Users",
+            string columnName = "NameKana",
+            string _as = null,
+            Sqls.Functions function = Sqls.Functions.None,
+            SqlStatement sub = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBracket: "\"NameKana\"",
+                    tableName: tableName,
+                    columnName: columnName,
+                    _as: _as,
+                    function: function,
+                    sub: sub)
+                : self;
+        }
+
+        public static SqlColumnCollection Users_NameKana(
+            this SqlColumnCollection self,
+            string tableName = "Users",
+            string columnName = "NameKana",
+            string _as = null,
+            Sqls.Functions function = Sqls.Functions.None,
+            SqlStatement sub = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBracket: "\"NameKana\"",
+                    tableName: tableName,
+                    columnName: columnName,
+                    _as: _as,
+                    function: function,
+                    sub: sub)
+                : self;
+        }
+
         public static UsersColumnCollection UserCode(
             this UsersColumnCollection self,
             string tableName = "Users",
@@ -98708,6 +98941,64 @@ namespace Implem.Pleasanter.Libraries.DataSources
                     columnBrackets: new string[] { "\"Name\"" },
                     tableName: tableName,
                     name: "Name",
+                    value: value,
+                    _operator: _operator,
+                    multiColumnOperator: multiColumnOperator,
+                    multiParamOperator: multiParamOperator,
+                    subLeft: subLeft,
+                    sub: sub,
+                    subPrefix: subPrefix,
+                    raw: raw)
+                : self;
+        }
+
+        public static UsersWhereCollection NameKana(
+            this UsersWhereCollection self,
+            object value = null,
+            string tableName = "Users",
+            string _operator = "=",
+            string multiColumnOperator = " or ",
+            string multiParamOperator = " and ",
+            SqlStatement subLeft = null,
+            SqlStatement sub = null,
+            bool subPrefix = true,
+            string raw = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBrackets: new string[] { "\"NameKana\"" },
+                    tableName: tableName,
+                    name: "NameKana",
+                    value: value,
+                    _operator: _operator,
+                    multiColumnOperator: multiColumnOperator,
+                    multiParamOperator: multiParamOperator,
+                    subLeft: subLeft,
+                    sub: sub,
+                    subPrefix: subPrefix,
+                    raw: raw)
+                : self;
+        }
+
+        public static SqlWhereCollection Users_NameKana(
+            this SqlWhereCollection self,
+            object value = null,
+            string tableName = "Users",
+            string _operator = "=",
+            string multiColumnOperator = " or ",
+            string multiParamOperator = " and ",
+            SqlStatement subLeft = null,
+            SqlStatement sub = null,
+            bool subPrefix = true,
+            string raw = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBrackets: new string[] { "\"NameKana\"" },
+                    tableName: tableName,
+                    name: "NameKana",
                     value: value,
                     _operator: _operator,
                     multiColumnOperator: multiColumnOperator,
@@ -102807,6 +103098,7 @@ namespace Implem.Pleasanter.Libraries.DataSources
                     case "LoginId": return self.LoginId();
                     case "GlobalId": return self.GlobalId();
                     case "Name": return self.Name();
+                    case "NameKana": return self.NameKana();
                     case "UserCode": return self.UserCode();
                     case "Password": return self.Password();
                     case "LastName": return self.LastName();
@@ -102939,6 +103231,18 @@ namespace Implem.Pleasanter.Libraries.DataSources
             this SqlGroupByCollection self, string tableName = "Users")
         {
             return self.Add(columnBracket: "\"Name\"", tableName: tableName);
+        }
+
+        public static UsersGroupByCollection NameKana(
+            this UsersGroupByCollection self, string tableName = "Users")
+        {
+            return self.Add(columnBracket: "\"NameKana\"", tableName: tableName);
+        }
+
+        public static SqlGroupByCollection Users_NameKana(
+            this SqlGroupByCollection self, string tableName = "Users")
+        {
+            return self.Add(columnBracket: "\"NameKana\"", tableName: tableName);
         }
 
         public static UsersGroupByCollection UserCode(
@@ -103678,6 +103982,23 @@ namespace Implem.Pleasanter.Libraries.DataSources
             Sqls.Functions function = Sqls.Functions.None)
         {
             new List<string> { "\"Name\"" }.ForEach(columnBracket =>
+                self.Add(
+                    columnBracket: columnBracket,
+                    orderType: orderType,
+                    tableName: tableName,
+                    isNullValue: isNullValue,
+                    function: function));
+            return self;
+        }
+
+        public static UsersOrderByCollection NameKana(
+            this UsersOrderByCollection self,
+            SqlOrderBy.Types orderType = SqlOrderBy.Types.asc,
+            string tableName = "Users",
+            string isNullValue = null,
+            Sqls.Functions function = Sqls.Functions.None)
+        {
+            new List<string> { "\"NameKana\"" }.ForEach(columnBracket =>
                 self.Add(
                     columnBracket: columnBracket,
                     orderType: orderType,
@@ -104630,6 +104951,23 @@ namespace Implem.Pleasanter.Libraries.DataSources
             Sqls.Functions function = Sqls.Functions.None)
         {
             new List<string> { "\"Name\"" }.ForEach(columnBracket =>
+                self.Add(
+                    columnBracket: columnBracket,
+                    orderType: orderType,
+                    tableName: tableName,
+                    isNullValue: isNullValue,
+                    function: function));
+            return self;
+        }
+
+        public static SqlOrderByCollection Users_NameKana(
+            this SqlOrderByCollection self,
+            SqlOrderBy.Types orderType = SqlOrderBy.Types.asc,
+            string tableName = "Users",
+            string isNullValue = null,
+            Sqls.Functions function = Sqls.Functions.None)
+        {
+            new List<string> { "\"NameKana\"" }.ForEach(columnBracket =>
                 self.Add(
                     columnBracket: columnBracket,
                     orderType: orderType,
@@ -105697,6 +106035,40 @@ namespace Implem.Pleasanter.Libraries.DataSources
                 ? self.Add(
                     columnBracket: "\"Name\"",
                     name: "Name",
+                    value: value,
+                    sub: sub,
+                    raw: raw)
+                : self;
+        }
+
+        public static UsersParamCollection NameKana(
+            this UsersParamCollection self,
+            object value = null,
+            SqlStatement sub = null,
+            string raw = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBracket: "\"NameKana\"",
+                    name: "NameKana",
+                    value: value,
+                    sub: sub,
+                    raw: raw)
+                : self;
+        }
+
+        public static SqlParamCollection Users_NameKana(
+            this SqlParamCollection self,
+            object value = null,
+            SqlStatement sub = null,
+            string raw = null,
+            bool _using = true)
+        {
+            return _using
+                ? self.Add(
+                    columnBracket: "\"NameKana\"",
+                    name: "NameKana",
                     value: value,
                     sub: sub,
                     raw: raw)
@@ -127449,6 +127821,7 @@ namespace Implem.Pleasanter.Libraries.DataSources
                 .InviteeName(_using: targets.Contains("InviteeName"))
                 .LoginId(_using: targets.Contains("LoginId"))
                 .Name(_using: targets.Contains("Name"))
+                .NameKana(_using: targets.Contains("NameKana"))
                 .Password(_using: targets.Contains("Password"))
                 .Language(_using: targets.Contains("Language"))
                 .Passphrase(_using: targets.Contains("Passphrase"))
@@ -127498,6 +127871,7 @@ namespace Implem.Pleasanter.Libraries.DataSources
                 .InviteeName(registrationModel.InviteeName.MaxLength(128), _using: registrationModel.InviteeName_Updated(context) || setDefault || (otherInitValue && !registrationModel.InviteeName.InitialValue(context)))
                 .LoginId(registrationModel.LoginId.MaxLength(256), _using: registrationModel.LoginId_Updated(context) || (otherInitValue && !registrationModel.LoginId.InitialValue(context)))
                 .Name(registrationModel.Name.MaxLength(128), _using: registrationModel.Name_Updated(context) || (otherInitValue && !registrationModel.Name.InitialValue(context)))
+                .NameKana(registrationModel.NameKana.MaxLength(128), _using: registrationModel.NameKana_Updated(context) || (otherInitValue && !registrationModel.NameKana.InitialValue(context)))
                 .Password(registrationModel.Password.MaxLength(128), _using: registrationModel.Password_Updated(context) || (otherInitValue && !registrationModel.Password.InitialValue(context)))
                 .Language(registrationModel.Language.MaxLength(32), _using: registrationModel.Language_Updated(context) || setDefault || (otherInitValue && !registrationModel.Language.InitialValue(context)))
                 .Passphrase(registrationModel.Passphrase.MaxLength(32), _using: registrationModel.Passphrase_Updated(context) || setDefault || (otherInitValue && !registrationModel.Passphrase.InitialValue(context)))
@@ -128594,6 +128968,7 @@ namespace Implem.Pleasanter.Libraries.DataSources
                 .LoginId(_using: targets.Contains("LoginId"))
                 .GlobalId(_using: targets.Contains("GlobalId"))
                 .Name(_using: targets.Contains("Name"))
+                .NameKana(_using: targets.Contains("NameKana"))
                 .UserCode(_using: targets.Contains("UserCode"))
                 .Password(_using: targets.Contains("Password"))
                 .LastName(_using: targets.Contains("LastName"))
@@ -128683,6 +129058,7 @@ namespace Implem.Pleasanter.Libraries.DataSources
                 .LoginId(userModel.LoginId.MaxLength(256), _using: userModel.LoginId_Updated(context) || setDefault || (otherInitValue && !userModel.LoginId.InitialValue(context)))
                 .GlobalId(userModel.GlobalId.MaxLength(36), _using: userModel.GlobalId_Updated(context) || (otherInitValue && !userModel.GlobalId.InitialValue(context)))
                 .Name(userModel.Name.MaxLength(128), _using: userModel.Name_Updated(context) || (otherInitValue && !userModel.Name.InitialValue(context)))
+                .NameKana(userModel.NameKana.MaxLength(128), _using: userModel.NameKana_Updated(context) || (otherInitValue && !userModel.NameKana.InitialValue(context)))
                 .UserCode(userModel.UserCode.MaxLength(32), _using: userModel.UserCode_Updated(context) || (otherInitValue && !userModel.UserCode.InitialValue(context)))
                 .Password(userModel.Password.MaxLength(128), _using: userModel.Password_Updated(context) || (otherInitValue && !userModel.Password.InitialValue(context)))
                 .LastName(userModel.LastName.MaxLength(32), _using: userModel.LastName_Updated(context) || (otherInitValue && !userModel.LastName.InitialValue(context)))

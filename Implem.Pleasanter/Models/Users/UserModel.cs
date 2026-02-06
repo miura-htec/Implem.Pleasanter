@@ -31,6 +31,7 @@ namespace Implem.Pleasanter.Models
         public string LoginId = string.Empty;
         public string GlobalId = string.Empty;
         public string Name = string.Empty;
+        public string NameKana = string.Empty;
         public string UserCode = string.Empty;
         public string Password = string.Empty;
         public string PasswordValidate = string.Empty;
@@ -115,6 +116,7 @@ namespace Implem.Pleasanter.Models
         public string SavedLoginId = string.Empty;
         public string SavedGlobalId = string.Empty;
         public string SavedName = string.Empty;
+        public string SavedNameKana = string.Empty;
         public string SavedUserCode = string.Empty;
         public string SavedPassword = string.Empty;
         public string SavedPasswordValidate = string.Empty;
@@ -228,6 +230,18 @@ namespace Implem.Pleasanter.Models
                 &&  (column == null
                     || column.DefaultInput.IsNullOrEmpty()
                     || column.GetDefaultInput(context: context).ToString() != Name);
+        }
+
+        public bool NameKana_Updated(Context context, bool copy = false, Column column = null)
+        {
+            if (copy && column?.CopyByDefault == true)
+            {
+                return column.GetDefaultInput(context: context).ToString() != NameKana;
+            }
+            return NameKana != SavedNameKana && NameKana != null
+                &&  (column == null
+                    || column.DefaultInput.IsNullOrEmpty()
+                    || column.GetDefaultInput(context: context).ToString() != NameKana);
         }
 
         public bool UserCode_Updated(Context context, bool copy = false, Column column = null)
@@ -870,6 +884,18 @@ namespace Implem.Pleasanter.Models
                         column: column,
                         mine: mine)
                             ? Name.ToExport(
+                                context: context,
+                                column: column,
+                                exportColumn: exportColumn)
+                            : string.Empty;
+                    break;
+                case "NameKana":
+                    value = ss.ReadColumnAccessControls.Allowed(
+                        context: context,
+                        ss: ss,
+                        column: column,
+                        mine: mine)
+                            ? NameKana.ToExport(
                                 context: context,
                                 column: column,
                                 exportColumn: exportColumn)
@@ -1731,6 +1757,7 @@ namespace Implem.Pleasanter.Models
                     case "LoginId": data.LoginId = LoginId; break;
                     case "GlobalId": data.GlobalId = GlobalId; break;
                     case "Name": data.Name = Name; break;
+                    case "NameKana": data.NameKana = NameKana; break;
                     case "UserCode": data.UserCode = UserCode; break;
                     case "Password": data.Password = Password; break;
                     case "LastName": data.LastName = LastName; break;
@@ -1828,6 +1855,11 @@ namespace Implem.Pleasanter.Models
                         column: column);
                 case "Name":
                     return Name.ToDisplay(
+                        context: context,
+                        ss: ss,
+                        column: column);
+                case "NameKana":
+                    return NameKana.ToDisplay(
                         context: context,
                         ss: ss,
                         column: column);
@@ -2189,6 +2221,11 @@ namespace Implem.Pleasanter.Models
                         column: column);
                 case "Name":
                     return Name.ToApiDisplayValue(
+                        context: context,
+                        ss: ss,
+                        column: column);
+                case "NameKana":
+                    return NameKana.ToApiDisplayValue(
                         context: context,
                         ss: ss,
                         column: column);
@@ -2575,6 +2612,11 @@ namespace Implem.Pleasanter.Models
                         column: column);
                 case "Name":
                     return Name.ToApiValue(
+                        context: context,
+                        ss: ss,
+                        column: column);
+                case "NameKana":
+                    return NameKana.ToApiValue(
                         context: context,
                         ss: ss,
                         column: column);
@@ -3274,6 +3316,7 @@ namespace Implem.Pleasanter.Models
                     case "Users_LoginId": LoginId = value.ToString(); break;
                     case "Users_GlobalId": GlobalId = value.ToString(); break;
                     case "Users_Name": Name = value.ToString(); break;
+                    case "Users_NameKana": NameKana = value.ToString(); break;
                     case "Users_UserCode": UserCode = value.ToString(); break;
                     case "Users_Password": Password = value.ToString().Sha512Cng(); break;
                     case "Users_PasswordValidate": PasswordValidate = value.ToString().Sha512Cng(); break;
@@ -3391,6 +3434,7 @@ namespace Implem.Pleasanter.Models
             LoginId = userModel.LoginId;
             GlobalId = userModel.GlobalId;
             Name = userModel.Name;
+            NameKana = userModel.NameKana;
             UserCode = userModel.UserCode;
             Password = userModel.Password;
             PasswordValidate = userModel.PasswordValidate;
@@ -3465,6 +3509,7 @@ namespace Implem.Pleasanter.Models
             if (data.LoginId != null) LoginId = data.LoginId.ToString().ToString();
             if (data.GlobalId != null) GlobalId = data.GlobalId.ToString().ToString();
             if (data.Name != null) Name = data.Name.ToString().ToString();
+            if (data.NameKana != null) NameKana = data.NameKana.ToString().ToString();
             if (data.UserCode != null) UserCode = data.UserCode.ToString().ToString();
             if (data.Password != null) Password = data.Password.ToString().ToString().Sha512Cng();
             if (data.LastName != null) LastName = data.LastName.ToString().ToString();
@@ -3675,6 +3720,10 @@ namespace Implem.Pleasanter.Models
                         case "Name":
                             Name = dataRow[column.ColumnName].ToString();
                             SavedName = Name;
+                            break;
+                        case "NameKana":
+                            NameKana = dataRow[column.ColumnName].ToString();
+                            SavedNameKana = NameKana;
                             break;
                         case "UserCode":
                             UserCode = dataRow[column.ColumnName].ToString();
@@ -3942,6 +3991,7 @@ namespace Implem.Pleasanter.Models
                 || LoginId_Updated(context: context)
                 || GlobalId_Updated(context: context)
                 || Name_Updated(context: context)
+                || NameKana_Updated(context: context)
                 || UserCode_Updated(context: context)
                 || Password_Updated(context: context)
                 || LastName_Updated(context: context)
@@ -4026,6 +4076,7 @@ namespace Implem.Pleasanter.Models
                 || LoginId_Updated(context: context)
                 || GlobalId_Updated(context: context)
                 || Name_Updated(context: context)
+                || NameKana_Updated(context: context)
                 || UserCode_Updated(context: context)
                 || Password_Updated(context: context)
                 || LastName_Updated(context: context)

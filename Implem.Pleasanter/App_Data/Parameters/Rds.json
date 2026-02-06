@@ -1,9 +1,9 @@
 ﻿{
     "Dbms": "PostgreSQL",
     "Provider": "Local",
-    "SaConnectionString": "Server=localhost;Database=postgres;UID=postgres;PWD=SetSaPWD",
-    "OwnerConnectionString": "Server=localhost;Database=#ServiceName#;UID=#ServiceName#_Owner;PWD=SetAdminsPWD",
-    "UserConnectionString": "Server=localhost;Database=#ServiceName#;UID=#ServiceName#_User;PWD=SetUsersPWD",
+    "SaConnectionString": "Server=localhost;Database=postgres;UID=pleasanter;PWD=pleasanter",
+    "OwnerConnectionString": "Server=localhost;Database=#ServiceName#;UID=#ServiceName#_Owner;PWD=pleasanter",
+    "UserConnectionString": "Server=localhost;Database=#ServiceName#;UID=#ServiceName#_User;PWD=pleasanter",
     "SqlCommandTimeOut": 0,
     "MinimumTime": 3,
     "DeadlockRetryCount": 4,

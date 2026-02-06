@@ -592,6 +592,24 @@ namespace Implem.Pleasanter.Models
                                     value: string.Empty,
                                     tabIndex: tabIndex,
                                     serverScriptModelColumn: serverScriptModelColumn);
+                    case "NameKana":
+                        return ss.ReadColumnAccessControls.Allowed(
+                            context: context,
+                            ss: ss,
+                            column: column,
+                            mine: mine)
+                                ? hb.Td(
+                                    context: context,
+                                    column: column,
+                                    value: registrationModel.NameKana,
+                                    tabIndex: tabIndex,
+                                    serverScriptModelColumn: serverScriptModelColumn)
+                                : hb.Td(
+                                    context: context,
+                                    column: column,
+                                    value: string.Empty,
+                                    tabIndex: tabIndex,
+                                    serverScriptModelColumn: serverScriptModelColumn);
                     case "Invitingflg":
                         return ss.ReadColumnAccessControls.Allowed(
                             context: context,
@@ -844,6 +862,9 @@ namespace Implem.Pleasanter.Models
                         context: context,
                         column: column); break;
                     case "Name": value = registrationModel.Name.GridText(
+                        context: context,
+                        column: column); break;
+                    case "NameKana": value = registrationModel.NameKana.GridText(
                         context: context,
                         column: column); break;
                     case "Invitingflg": value = registrationModel.Invitingflg.GridText(
@@ -1205,6 +1226,27 @@ namespace Implem.Pleasanter.Models
                                 preview: preview);
                         }
                         break;
+                    case "NameKana":
+                        if (context.Action != "new")
+                        {
+                            if (context.Action != "login")
+                            {
+                                column.EditorReadOnly = true;
+                            }
+                            hb.Field(
+                                context: context,
+                                ss: ss,
+                                column: column,
+                                value: registrationModel.NameKana
+                                    .ToControl(context: context, ss: ss, column: column),
+                                columnPermissionType: Permissions.ColumnPermissionType(
+                                    context: context,
+                                    ss: ss,
+                                    column: column,
+                                    baseModel: registrationModel),
+                                preview: preview);
+                        }
+                        break;
                     case "Password":
                         if (context.Action == "login")
                         {
@@ -1353,6 +1395,12 @@ namespace Implem.Pleasanter.Models
                             column: column);
                 case "Name":
                     return registrationModel.Name
+                        .ToControl(
+                            context: context,
+                            ss: ss,
+                            column: column);
+                case "NameKana":
+                    return registrationModel.NameKana
                         .ToControl(
                             context: context,
                             ss: ss,
@@ -1605,6 +1653,12 @@ namespace Implem.Pleasanter.Models
                                 res.Val(
                                     target: "#Registrations_Name" + idSuffix,
                                     value: registrationModel.Name.ToResponse(context: context, ss: ss, column: column),
+                                    options: column.ResponseValOptions(serverScriptModelColumn: serverScriptModelColumn));
+                                break;
+                            case "NameKana":
+                                res.Val(
+                                    target: "#Registrations_NameKana" + idSuffix,
+                                    value: registrationModel.NameKana.ToResponse(context: context, ss: ss, column: column),
                                     options: column.ResponseValOptions(serverScriptModelColumn: serverScriptModelColumn));
                                 break;
                             case "Password":

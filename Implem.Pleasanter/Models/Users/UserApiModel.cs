@@ -12,6 +12,7 @@ namespace Implem.Pleasanter.Models
         public string LoginId { get; set; }
         public string GlobalId { get; set; }
         public string Name { get; set; }
+        public string NameKana { get; set; }
         public string UserCode { get; set; }
         public string Password { get; set; }
         public string LastName { get; set; }
@@ -75,6 +76,7 @@ namespace Implem.Pleasanter.Models
                 case "LoginId": return LoginId;
                 case "GlobalId": return GlobalId;
                 case "Name": return Name;
+                case "NameKana": return NameKana;
                 case "UserCode": return UserCode;
                 case "Password": return Password;
                 case "LastName": return LastName;

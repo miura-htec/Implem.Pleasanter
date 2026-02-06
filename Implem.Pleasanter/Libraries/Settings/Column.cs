@@ -1729,6 +1729,9 @@ namespace Implem.Pleasanter.Libraries.Settings
                         case "Name":
                             sql.Registrations_Name(tableName: path, _as: _as);
                             break;
+                        case "NameKana":
+                            sql.Registrations_NameKana(tableName: path, _as: _as);
+                            break;
                         case "Password":
                             sql.Registrations_Password(tableName: path, _as: _as);
                             break;
@@ -2096,6 +2099,9 @@ namespace Implem.Pleasanter.Libraries.Settings
                             break;
                         case "Name":
                             sql.Users_Name(tableName: path, _as: _as);
+                            break;
+                        case "NameKana":
+                            sql.Users_NameKana(tableName: path, _as: _as);
                             break;
                         case "UserCode":
                             sql.Users_UserCode(tableName: path, _as: _as);

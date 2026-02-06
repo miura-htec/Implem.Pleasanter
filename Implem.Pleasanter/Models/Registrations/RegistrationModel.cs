@@ -33,6 +33,7 @@ namespace Implem.Pleasanter.Models
         public string InviteeName = string.Empty;
         public string LoginId = string.Empty;
         public string Name = string.Empty;
+        public string NameKana = string.Empty;
         public string Password = string.Empty;
         public string PasswordValidate = string.Empty;
         public string Language = "ja";
@@ -48,6 +49,7 @@ namespace Implem.Pleasanter.Models
         public string SavedInviteeName = string.Empty;
         public string SavedLoginId = string.Empty;
         public string SavedName = string.Empty;
+        public string SavedNameKana = string.Empty;
         public string SavedPassword = string.Empty;
         public string SavedPasswordValidate = string.Empty;
         public string SavedLanguage = "ja";
@@ -139,6 +141,18 @@ namespace Implem.Pleasanter.Models
                 &&  (column == null
                     || column.DefaultInput.IsNullOrEmpty()
                     || column.GetDefaultInput(context: context).ToString() != Name);
+        }
+
+        public bool NameKana_Updated(Context context, bool copy = false, Column column = null)
+        {
+            if (copy && column?.CopyByDefault == true)
+            {
+                return column.GetDefaultInput(context: context).ToString() != NameKana;
+            }
+            return NameKana != SavedNameKana && NameKana != null
+                &&  (column == null
+                    || column.DefaultInput.IsNullOrEmpty()
+                    || column.GetDefaultInput(context: context).ToString() != NameKana);
         }
 
         public bool Password_Updated(Context context, bool copy = false, Column column = null)
@@ -392,6 +406,7 @@ namespace Implem.Pleasanter.Models
                     case "InviteeName": data.InviteeName = InviteeName; break;
                     case "LoginId": data.LoginId = LoginId; break;
                     case "Name": data.Name = Name; break;
+                    case "NameKana": data.NameKana = NameKana; break;
                     case "Password": data.Password = Password; break;
                     case "Language": data.Language = Language; break;
                     case "Passphrase": data.Passphrase = Passphrase; break;
@@ -457,6 +472,11 @@ namespace Implem.Pleasanter.Models
                         column: column);
                 case "Name":
                     return Name.ToDisplay(
+                        context: context,
+                        ss: ss,
+                        column: column);
+                case "NameKana":
+                    return NameKana.ToDisplay(
                         context: context,
                         ss: ss,
                         column: column);
@@ -626,6 +646,11 @@ namespace Implem.Pleasanter.Models
                         context: context,
                         ss: ss,
                         column: column);
+                case "NameKana":
+                    return NameKana.ToApiDisplayValue(
+                        context: context,
+                        ss: ss,
+                        column: column);
                 case "Password":
                     return Password.ToApiDisplayValue(
                         context: context,
@@ -789,6 +814,11 @@ namespace Implem.Pleasanter.Models
                         column: column);
                 case "Name":
                     return Name.ToApiValue(
+                        context: context,
+                        ss: ss,
+                        column: column);
+                case "NameKana":
+                    return NameKana.ToApiValue(
                         context: context,
                         ss: ss,
                         column: column);
@@ -1178,6 +1208,7 @@ namespace Implem.Pleasanter.Models
                     case "Registrations_InviteeName": InviteeName = value.ToString(); break;
                     case "Registrations_LoginId": LoginId = value.ToString(); break;
                     case "Registrations_Name": Name = value.ToString(); break;
+                    case "Registrations_NameKana": NameKana = value.ToString(); break;
                     case "Registrations_Password": Password = value.ToString().Sha512Cng(); break;
                     case "Registrations_PasswordValidate": PasswordValidate = value.ToString().Sha512Cng(); break;
                     case "Registrations_Language": Language = value.ToString(); break;
@@ -1256,6 +1287,7 @@ namespace Implem.Pleasanter.Models
             InviteeName = registrationModel.InviteeName;
             LoginId = registrationModel.LoginId;
             Name = registrationModel.Name;
+            NameKana = registrationModel.NameKana;
             Password = registrationModel.Password;
             PasswordValidate = registrationModel.PasswordValidate;
             Language = registrationModel.Language;
@@ -1286,6 +1318,7 @@ namespace Implem.Pleasanter.Models
             if (data.InviteeName != null) InviteeName = data.InviteeName.ToString().ToString();
             if (data.LoginId != null) LoginId = data.LoginId.ToString().ToString();
             if (data.Name != null) Name = data.Name.ToString().ToString();
+            if (data.NameKana != null) NameKana = data.NameKana.ToString().ToString();
             if (data.Password != null) Password = data.Password.ToString().ToString().Sha512Cng();
             if (data.Language != null) Language = data.Language.ToString().ToString();
             if (data.Passphrase != null) Passphrase = data.Passphrase.ToString().ToString();
@@ -1472,6 +1505,10 @@ namespace Implem.Pleasanter.Models
                             Name = dataRow[column.ColumnName].ToString();
                             SavedName = Name;
                             break;
+                        case "NameKana":
+                            NameKana = dataRow[column.ColumnName].ToString();
+                            SavedNameKana = NameKana;
+                            break;
                         case "Password":
                             Password = dataRow[column.ColumnName].ToString();
                             SavedPassword = Password;
@@ -1596,6 +1633,7 @@ namespace Implem.Pleasanter.Models
                 || InviteeName_Updated(context: context)
                 || LoginId_Updated(context: context)
                 || Name_Updated(context: context)
+                || NameKana_Updated(context: context)
                 || Password_Updated(context: context)
                 || Language_Updated(context: context)
                 || Passphrase_Updated(context: context)
@@ -1647,6 +1685,7 @@ namespace Implem.Pleasanter.Models
                 || InviteeName_Updated(context: context)
                 || LoginId_Updated(context: context)
                 || Name_Updated(context: context)
+                || NameKana_Updated(context: context)
                 || Password_Updated(context: context)
                 || Language_Updated(context: context)
                 || Passphrase_Updated(context: context)
@@ -1701,6 +1740,7 @@ namespace Implem.Pleasanter.Models
                             .LoginId(LoginId)
                             .Password(Password)
                             .Name(Name)
+                            .NameKana(NameKana)
                             .Language(Language)
                             ),
                     Rds.InsertMailAddresses(

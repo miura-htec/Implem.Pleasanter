@@ -14,6 +14,7 @@ namespace Implem.Pleasanter.Models
         public string InviteeName { get; set; }
         public string LoginId { get; set; }
         public string Name { get; set; }
+        public string NameKana { get; set; }
         public string Password { get; set; }
         public string Language { get; set; }
         public string Passphrase { get; set; }
@@ -43,6 +44,7 @@ namespace Implem.Pleasanter.Models
                 case "InviteeName": return InviteeName;
                 case "LoginId": return LoginId;
                 case "Name": return Name;
+                case "NameKana": return NameKana;
                 case "Password": return Password;
                 case "Language": return Language;
                 case "Passphrase": return Passphrase;
