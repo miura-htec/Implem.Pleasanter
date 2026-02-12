@@ -9,6 +9,7 @@ namespace Implem.Pleasanter.Libraries.Responses
         public string Title;
         public string Css;
         public string Style;
+        public string IconKey;
         public int? Order;
         public Dictionary<string, string> Attributes;
 
@@ -18,7 +19,8 @@ namespace Implem.Pleasanter.Libraries.Responses
             string css = null,
             string style = null,
             int? order = null,
-            Dictionary<string, string> attributes = null)
+            Dictionary<string, string> attributes = null,
+            string iconKey = null)
         {
             Text = text;
             Title = title;
@@ -26,6 +28,7 @@ namespace Implem.Pleasanter.Libraries.Responses
             Style = style;
             Order = order;
             Attributes = attributes;
+            IconKey = iconKey;
         }
 
         public ControlData(

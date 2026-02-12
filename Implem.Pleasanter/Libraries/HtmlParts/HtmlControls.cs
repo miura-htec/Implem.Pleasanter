@@ -999,12 +999,14 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
                             }
                             else
                             {
+                                var materialSymbolTarget = listItem.Value?.IconKey
+                                    ?? listItem.Key;
                                 hb
                                     .Span(
                                         css: "material-symbols-sharp is-fill",
                                         action: () => hb
                                             .Text(
-                                                text: GetMaterialSymbolName(listItem.Key)),
+                                                text: GetMaterialSymbolName(materialSymbolTarget)),
                                         _using: setMaterialSymbols)
                                     .Text(text: listItem.Value?.Text);
                             }
@@ -1177,7 +1179,7 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
             var iconTypesMap = new Dictionary<string, string>
             {
                 ["basic"] = "apps",
-                ["class"] = "text_fields",
+                ["class"] = "sell",
                 ["num"] = "timer_10",
                 ["date"] = "calendar_month",
                 ["description"] = "edit_note",
@@ -1187,6 +1189,7 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
             if (isListIcon)
             {
                 iconTypesMap["_Links-"] = "add_link";
+                iconTypesMap["Text"] = "text_fields";
                 iconTypesMap["_Section-"] = "h_mobiledata";
             }
             return iconTypesMap;

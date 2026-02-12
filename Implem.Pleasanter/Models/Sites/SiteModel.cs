@@ -4794,7 +4794,12 @@ namespace Implem.Pleasanter.Models
             switch (context.Forms.Data("EditorSourceColumnsType"))
             {
                 case "Others":
-                    if (context.Forms.List("EditorSourceColumns")?.FirstOrDefault()?.StartsWith("_Section-") == true)
+                    AddOrUpdateEditorColumnHash(context: context);
+                    var sourceColumn = context
+                        .Forms
+                        .List("EditorSourceColumns")
+                        ?.FirstOrDefault();
+                    if (sourceColumn?.StartsWith("_Section-") == true)
                     {
                         var sectionName = SiteSettings.SectionName(SiteSettings.AddSection(new Section
                         {
@@ -4822,6 +4827,52 @@ namespace Implem.Pleasanter.Models
                                         context: context,
                                         tabId: context.Forms.Int("EditorColumnsTabs")),
                                 selectedValueTextCollection: new List<string> { sectionName },
+                                setMaterialSymbols: context.ThemeVersionOver2_0()));
+                    }
+                    else if (sourceColumn == "Text")
+                    {
+                        var textColumnName = SiteSettings
+                            .EditorSelectableOptions(
+                                context: context,
+                                enabled: false)
+                            ?.Keys
+                            .FirstOrDefault(columnName => columnName.StartsWith("Description"));
+                        var textColumn = SiteSettings.GetColumn(
+                            context: context,
+                            columnName: textColumnName);
+                        if (textColumnName.IsNullOrEmpty() || textColumn == null)
+                        {
+                            res.Message(Messages.CanNotPerformed(context: context));
+                            break;
+                        }
+                        textColumn.ControlType = "StaticText";
+                        textColumn.LabelText = Displays.Get(context: context, id: "Text");
+                        textColumn.FieldCss = string.Empty;
+                        textColumn.DefaultInput = string.Empty;
+                        textColumn.ValidateRequired = false;
+                        textColumn.EditorReadOnly = true;
+                        var tab = SiteSettings
+                            .EditorColumnHash
+                            .Get(SiteSettings.TabName(context.Forms.Int("EditorColumnsTabsTarget")));
+                        if (tab == null)
+                        {
+                            tab = new List<string>();
+                            SiteSettings.AddOrUpdateEditorColumnHash(
+                                editorColumnsAll: tab,
+                                editorColumnsTabsTarget: context
+                                    .Forms
+                                    .Int("EditorColumnsTabsTarget")
+                                    .ToStr());
+                        }
+                        tab.Add(textColumnName);
+                        res.Html(
+                            "#EditorColumns",
+                            new HtmlBuilder().SelectableItems(
+                                listItemCollection: SiteSettings
+                                    .EditorSelectableOptions(
+                                        context: context,
+                                        tabId: context.Forms.Int("EditorColumnsTabs")),
+                                selectedValueTextCollection: new List<string> { textColumnName },
                                 setMaterialSymbols: context.ThemeVersionOver2_0()));
                     }
                     break;

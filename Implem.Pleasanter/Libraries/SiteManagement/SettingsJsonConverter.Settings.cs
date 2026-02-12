@@ -2284,6 +2284,12 @@ namespace Implem.Pleasanter.Libraries.SiteManagement
                                         dst.DateTimeStep = column.DateTimeStep;
                                         break;
                                     case Types.CsString:
+                                        if (column.ControlType == "StaticText")
+                                        {
+                                            dst.ControlType = Displays.Get(
+                                                context: context,
+                                                id: "StaticText");
+                                        }
                                         switch (column.ControlType)
                                         {
                                             case "Attachments":

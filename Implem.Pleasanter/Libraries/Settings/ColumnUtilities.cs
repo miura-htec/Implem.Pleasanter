@@ -258,7 +258,10 @@ namespace Implem.Pleasanter.Libraries.Settings
                 return new ControlData(
                     text: $"[{ss.Title}] {labelText}",
                     title: labelTextDefault,
-                    order: order);
+                    order: order,
+                    iconKey: string.Equals(column.ControlType, "StaticText", StringComparison.Ordinal)
+                        ? "Text"
+                        : null);
             }
             else
             {

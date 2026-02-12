@@ -591,6 +591,27 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
                                 extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
                                 extendedHtmlAfterControl: extendedHtmlAfterControl);
                         default:
+                            if (IsStaticText(ss: ss, column: column))
+                            {
+                                return hb.Field(
+                                    fieldId: controlId + "Field",
+                                    fieldDescription: fieldDescription,
+                                    fieldCss: Css.Class("field-wide field-static-text", fieldCss),
+                                    labelCss: labelCss,
+                                    labelText: labelText,
+                                    labelRaw: labelRaw,
+                                    controlOnly: true,
+                                    controlAction: () => hb
+                                        .Span(
+                                            css: "control-static-text-label",
+                                            attributes: new HtmlAttributes()
+                                                .Style("white-space: pre-wrap;"),
+                                            action: () => hb.Text(text: labelText)),
+                                    controlContainerCss: controlContainerCss,
+                                    extendedHtmlBeforeLabel: extendedHtmlBeforeLabel,
+                                    extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
+                                    extendedHtmlAfterControl: extendedHtmlAfterControl);
+                            }
                             var dataRaw = column.TypeName.CsTypeSummary() == Types.CsNumeric
                                 ? rawValue?.ToString() ?? (column.Nullable == true ? "" : "0")
                                 : null;
@@ -697,6 +718,27 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
                                 extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
                                 extendedHtmlAfterControl: extendedHtmlAfterControl);
                         case ControlTypes.Text:
+                            if (IsStaticText(ss: ss, column: column))
+                            {
+                                return hb.Field(
+                                    fieldId: controlId + "Field",
+                                    fieldDescription: fieldDescription,
+                                    fieldCss: Css.Class("field-wide field-static-text", fieldCss),
+                                    labelCss: labelCss,
+                                    labelText: labelText,
+                                    labelRaw: labelRaw,
+                                    controlOnly: true,
+                                    controlAction: () => hb
+                                        .Span(
+                                            css: "control-static-text-label",
+                                            attributes: new HtmlAttributes()
+                                                .Style("white-space: pre-wrap;"),
+                                            action: () => hb.Text(text: labelText)),
+                                    controlContainerCss: controlContainerCss,
+                                    extendedHtmlBeforeLabel: extendedHtmlBeforeLabel,
+                                    extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
+                                    extendedHtmlAfterControl: extendedHtmlAfterControl);
+                            }
                             return hb.FieldText(
                                 fieldId: controlId + "Field",
                                 controlId: controlId,
@@ -1051,6 +1093,7 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
             {
                 case "TextBox": return ControlTypes.TextBox;
                 case "Id": return ControlTypes.Text;
+                case "StaticText": return ControlTypes.Text;
                 case "Slider": return ControlTypes.Slider;
                 case "Spinner": return ControlTypes.Spinner;
                 case "Attachments": return ControlTypes.Attachments;
@@ -1072,6 +1115,21 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
                 default:
                     return ControlTypes.Text;
             }
+        }
+
+        private static bool IsStaticText(SiteSettings ss, Column column)
+        {
+            if (string.Equals(column?.ControlType, "StaticText", StringComparison.Ordinal))
+            {
+                return true;
+            }
+            var columnName = column?.ColumnName;
+            if (columnName.IsNullOrEmpty() || ss?.ColumnHash == null)
+            {
+                return false;
+            }
+            var siteColumn = ss.ColumnHash.Get(columnName);
+            return string.Equals(siteColumn?.ControlType, "StaticText", StringComparison.Ordinal);
         }
 
         private static ControlTypes StringControlType(Column column)

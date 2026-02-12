@@ -1,0 +1,34 @@
+{
+    "Id": "Text",
+    "Type": 110,
+    "ClientScript": true,
+    "Languages": [
+        {
+            "Body": "Text"
+        },
+        {
+            "Language": "zh",
+            "Body": "文本"
+        },
+        {
+            "Language": "ja",
+            "Body": "テキスト"
+        },
+        {
+            "Language": "de",
+            "Body": "Text"
+        },
+        {
+            "Language": "ko",
+            "Body": "텍스트"
+        },
+        {
+            "Language": "es",
+            "Body": "Texto"
+        },
+        {
+            "Language": "vn",
+            "Body": "Van ban"
+        }
+    ]
+}

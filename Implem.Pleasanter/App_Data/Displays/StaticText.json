@@ -1,0 +1,34 @@
+{
+    "Id": "StaticText",
+    "Type": 110,
+    "ClientScript": true,
+    "Languages": [
+        {
+            "Body": "Static text"
+        },
+        {
+            "Language": "zh",
+            "Body": "静态文本"
+        },
+        {
+            "Language": "ja",
+            "Body": "固定テキスト"
+        },
+        {
+            "Language": "de",
+            "Body": "Statischer Text"
+        },
+        {
+            "Language": "ko",
+            "Body": "고정 텍스트"
+        },
+        {
+            "Language": "es",
+            "Body": "Texto estatico"
+        },
+        {
+            "Language": "vn",
+            "Body": "Van ban co dinh"
+        }
+    ]
+}
