@@ -7805,7 +7805,7 @@ namespace Implem.Pleasanter.Models
                         {
                             hb
                                 .FieldTextBox(
-                                    textType: IsTextControlType(controlType: column.ControlType)
+                                    textType: isTextControl
                                         ? HtmlTypes.TextTypes.MultiLine
                                         : HtmlTypes.TextTypes.Normal,
                                     fieldCss: isTextControl
@@ -8150,26 +8150,6 @@ namespace Implem.Pleasanter.Models
                                                 selectedValue: column.DateTimeStep?.ToString());
                                         break;
                                     case Types.CsString:
-                                        if (!column.Id_Ver
-                                            && !column.NotUpdate
-                                            && column.ColumnName != "Comments"
-                                            && column.ControlType != "Attachments"
-                                            && column.ControlType != "ChoicesText"
-                                            && column.ControlType != "MarkDown")
-                                        {
-                                            hb.FieldDropDown(
-                                                context: context,
-                                                controlId: "ControlType",
-                                                labelText: Displays.ControlType(context: context),
-                                                optionCollection: new Dictionary<string, string>
-                                                {
-                                                    { "Normal", Displays.Normal(context: context) },
-                                                    { "Text", Displays.Get(context: context, id: "Text") }
-                                                },
-                                                selectedValue: IsTextControlType(controlType: column.ControlType)
-                                                    ? "Text"
-                                                    : "Normal");
-                                        }
                                         switch (column.ControlType)
                                         {
                                             case "Attachments":
@@ -8296,7 +8276,6 @@ namespace Implem.Pleasanter.Models
                                                         labelText: Displays.DefaultInput(context: context),
                                                         text: column.DefaultInput,
                                                         _using: column.ColumnName != "Comments"
-                                                            && !IsTextControlType(controlType: column.ControlType)
                                                             && !column.NotUpdate);
                                                 break;
                                         }
@@ -18655,7 +18634,6 @@ namespace Implem.Pleasanter.Models
                         text: detail.DefaultInput,
                         _using: column.ColumnName != "Comments"
                             && column.ControlType != "Attachments"
-                            && !IsTextControlType(controlType: column.ControlType)
                             && !column.NotUpdate);
                     break;
                 case Types.CsDateTime:

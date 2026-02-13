@@ -5719,7 +5719,6 @@ namespace Implem.Pleasanter.Libraries.Settings
                     columnName: columnDefinition.ColumnName))
                 .Where(column => column.ColumnName != "Comments"
                     && column.ControlType != "Attachments"
-                    && column.ControlType != "Text"
                     && !column.Id_Ver
                     && !column.NotUpdate
                     && !column.OtherColumn())

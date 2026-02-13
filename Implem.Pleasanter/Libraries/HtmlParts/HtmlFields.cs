@@ -593,20 +593,14 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
                         default:
                             if (IsTextControl(ss: ss, column: column))
                             {
-                                return hb.Field(
+                                return FieldTextLabel(
+                                    hb: hb,
                                     fieldId: controlId + "Field",
                                     fieldDescription: fieldDescription,
-                                    fieldCss: Css.Class("field-wide field-text-label", fieldCss),
+                                    fieldCss: fieldCss,
                                     labelCss: labelCss,
                                     labelText: labelText,
                                     labelRaw: labelRaw,
-                                    controlOnly: true,
-                                    controlAction: () => hb
-                                        .Span(
-                                            css: "control-text-label",
-                                            attributes: new HtmlAttributes()
-                                                .Style("white-space: pre-wrap;"),
-                                            action: () => hb.Text(text: labelText)),
                                     controlContainerCss: controlContainerCss,
                                     extendedHtmlBeforeLabel: extendedHtmlBeforeLabel,
                                     extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
@@ -720,20 +714,14 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
                         case ControlTypes.Text:
                             if (IsTextControl(ss: ss, column: column))
                             {
-                                return hb.Field(
+                                return FieldTextLabel(
+                                    hb: hb,
                                     fieldId: controlId + "Field",
                                     fieldDescription: fieldDescription,
-                                    fieldCss: Css.Class("field-wide field-text-label", fieldCss),
+                                    fieldCss: fieldCss,
                                     labelCss: labelCss,
                                     labelText: labelText,
                                     labelRaw: labelRaw,
-                                    controlOnly: true,
-                                    controlAction: () => hb
-                                        .Span(
-                                            css: "control-text-label",
-                                            attributes: new HtmlAttributes()
-                                                .Style("white-space: pre-wrap;"),
-                                            action: () => hb.Text(text: labelText)),
                                     controlContainerCss: controlContainerCss,
                                     extendedHtmlBeforeLabel: extendedHtmlBeforeLabel,
                                     extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
@@ -1130,6 +1118,38 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
             }
             var siteColumn = ss.ColumnHash.Get(columnName);
             return string.Equals(siteColumn?.ControlType, "Text", StringComparison.Ordinal);
+        }
+
+        private static HtmlBuilder FieldTextLabel(
+            HtmlBuilder hb,
+            string fieldId,
+            string fieldDescription,
+            string fieldCss,
+            string labelCss,
+            string labelText,
+            string labelRaw,
+            string controlContainerCss,
+            string extendedHtmlBeforeLabel,
+            string extendedHtmlBetweenLabelAndControl,
+            string extendedHtmlAfterControl)
+        {
+            return hb.Field(
+                fieldId: fieldId,
+                fieldDescription: fieldDescription,
+                fieldCss: Css.Class("field-wide", fieldCss),
+                labelCss: labelCss,
+                labelText: labelText,
+                labelRaw: labelRaw,
+                controlOnly: true,
+                controlAction: () => hb
+                    .Span(
+                        attributes: new HtmlAttributes()
+                            .Style("white-space: pre-wrap;"),
+                        action: () => hb.Text(text: labelText)),
+                controlContainerCss: controlContainerCss,
+                extendedHtmlBeforeLabel: extendedHtmlBeforeLabel,
+                extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
+                extendedHtmlAfterControl: extendedHtmlAfterControl);
         }
 
         private static ControlTypes StringControlType(Column column)
