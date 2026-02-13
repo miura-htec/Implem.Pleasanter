@@ -4845,7 +4845,7 @@ namespace Implem.Pleasanter.Models
                             res.Message(Messages.CanNotPerformed(context: context));
                             break;
                         }
-                        textColumn.ControlType = "StaticText";
+                        textColumn.ControlType = "Text";
                         textColumn.LabelText = Displays.Get(context: context, id: "Text");
                         textColumn.FieldCss = string.Empty;
                         textColumn.DefaultInput = string.Empty;

@@ -2284,11 +2284,11 @@ namespace Implem.Pleasanter.Libraries.SiteManagement
                                         dst.DateTimeStep = column.DateTimeStep;
                                         break;
                                     case Types.CsString:
-                                        if (column.ControlType == "StaticText")
+                                        if (column.ControlType == "Text")
                                         {
                                             dst.ControlType = Displays.Get(
                                                 context: context,
-                                                id: "StaticText");
+                                                id: "Text");
                                         }
                                         switch (column.ControlType)
                                         {

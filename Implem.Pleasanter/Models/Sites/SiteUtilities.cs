@@ -7390,6 +7390,11 @@ namespace Implem.Pleasanter.Models
                 method: "post");
         }
 
+        private static bool IsTextControlType(string controlType)
+        {
+            return string.Equals(controlType, "Text", StringComparison.Ordinal);
+        }
+
         /// <summary>
         /// Fixed:
         /// </summary>
@@ -7397,7 +7402,7 @@ namespace Implem.Pleasanter.Models
             Context context, SiteSettings ss, Column column, IEnumerable<string> titleColumns)
         {
             var hb = new HtmlBuilder();
-            var isStaticText = string.Equals(column.ControlType, "StaticText", StringComparison.Ordinal);
+            var isTextControl = IsTextControlType(controlType: column.ControlType);
             if (column.TypeName == "nvarchar"
                 && column.ControlType != "Attachments")
             {
@@ -7424,14 +7429,14 @@ namespace Implem.Pleasanter.Models
                                             href: "#AutoNumberingSettingTab",
                                             text: Displays.AutoNumbering(context: context)),
                                     _using: column.AutoNumberingColumn()
-                                        && !isStaticText)
+                                        && !isTextControl)
                                 .Li(
                                     action: () => hb
                                         .A(
                                             href: "#EditorDetailsettingTab",
                                             text: Displays.ValidateInput(context: context)),
                                     _using: !column.OtherColumn()
-                                        && !isStaticText)
+                                        && !isTextControl)
                                 .Li(
                                     action: () => hb
                                         .A(
@@ -7439,14 +7444,14 @@ namespace Implem.Pleasanter.Models
                                             text: Displays.ExtendedHtml(context: context)),
                                     _using: !column.OtherColumn()
                                         && column.ColumnName != "Comments"
-                                        && !isStaticText)
+                                        && !isTextControl)
                                 .Li(
                                     action: () => hb
                                         .A(
                                             href: "#MultilingualSettingTab",
                                             text: Displays.Multilingual(context: context)),
                                     _using: !column.OtherColumn()
-                                        && !isStaticText))
+                                        && !isTextControl))
                         .EditorColumnDialogTab(
                             context: context,
                             ss: ss,
@@ -7585,7 +7590,7 @@ namespace Implem.Pleasanter.Models
             SiteSettings ss,
             Column column)
         {
-            if (string.Equals(column.ControlType, "StaticText", StringComparison.Ordinal))
+            if (IsTextControlType(controlType: column.ControlType))
             {
                 return hb;
             }
@@ -7655,7 +7660,7 @@ namespace Implem.Pleasanter.Models
             Context context,
             SiteSettings ss)
         {
-            if (string.Equals(column.ControlType, "StaticText", StringComparison.Ordinal))
+            if (IsTextControlType(controlType: column.ControlType))
             {
                 return hb;
             }
@@ -7711,7 +7716,7 @@ namespace Implem.Pleasanter.Models
             Context context,
             SiteSettings ss)
         {
-            if (string.Equals(column.ControlType, "StaticText", StringComparison.Ordinal))
+            if (IsTextControlType(controlType: column.ControlType))
             {
                 return hb;
             }
@@ -7743,7 +7748,7 @@ namespace Implem.Pleasanter.Models
         public static HtmlBuilder EditorDetailsettingTab(
             this HtmlBuilder hb, Column column, Context context, SiteSettings ss)
         {
-            if (string.Equals(column.ControlType, "StaticText", StringComparison.Ordinal))
+            if (IsTextControlType(controlType: column.ControlType))
             {
                 return hb;
             }
@@ -7789,7 +7794,7 @@ namespace Implem.Pleasanter.Models
             IEnumerable<string> titleColumns)
         {
             var type = column.TypeName.CsTypeSummary();
-            var isStaticText = string.Equals(column.ControlType, "StaticText", StringComparison.Ordinal);
+            var isTextControl = IsTextControlType(controlType: column.ControlType);
             return hb.TabsPanelField(
                 id: "EditorColumnDialogTab",
                 action: () => hb
@@ -7800,17 +7805,17 @@ namespace Implem.Pleasanter.Models
                         {
                             hb
                                 .FieldTextBox(
-                                    textType: column.ControlType == "StaticText"
+                                    textType: IsTextControlType(controlType: column.ControlType)
                                         ? HtmlTypes.TextTypes.MultiLine
                                         : HtmlTypes.TextTypes.Normal,
-                                    fieldCss: isStaticText
+                                    fieldCss: isTextControl
                                         ? "field-wide"
                                         : null,
                                     controlId: "LabelText",
                                     labelText: Displays.DisplayName(context: context),
                                     text: column.LabelText,
                                     validateRequired: true);
-                            if (isStaticText)
+                            if (isTextControl)
                             {
                                 return;
                             }
@@ -8159,10 +8164,10 @@ namespace Implem.Pleasanter.Models
                                                 optionCollection: new Dictionary<string, string>
                                                 {
                                                     { "Normal", Displays.Normal(context: context) },
-                                                    { "StaticText", Displays.Get(context: context, id: "StaticText") }
+                                                    { "Text", Displays.Get(context: context, id: "Text") }
                                                 },
-                                                selectedValue: column.ControlType == "StaticText"
-                                                    ? "StaticText"
+                                                selectedValue: IsTextControlType(controlType: column.ControlType)
+                                                    ? "Text"
                                                     : "Normal");
                                         }
                                         switch (column.ControlType)
@@ -8291,7 +8296,7 @@ namespace Implem.Pleasanter.Models
                                                         labelText: Displays.DefaultInput(context: context),
                                                         text: column.DefaultInput,
                                                         _using: column.ColumnName != "Comments"
-                                                            && column.ControlType != "StaticText"
+                                                            && !IsTextControlType(controlType: column.ControlType)
                                                             && !column.NotUpdate);
                                                 break;
                                         }
@@ -18650,7 +18655,7 @@ namespace Implem.Pleasanter.Models
                         text: detail.DefaultInput,
                         _using: column.ColumnName != "Comments"
                             && column.ControlType != "Attachments"
-                            && column.ControlType != "StaticText"
+                            && !IsTextControlType(controlType: column.ControlType)
                             && !column.NotUpdate);
                     break;
                 case Types.CsDateTime:

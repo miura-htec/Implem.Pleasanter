@@ -259,7 +259,7 @@ namespace Implem.Pleasanter.Libraries.Settings
                     text: $"[{ss.Title}] {labelText}",
                     title: labelTextDefault,
                     order: order,
-                    iconKey: string.Equals(column.ControlType, "StaticText", StringComparison.Ordinal)
+                    iconKey: string.Equals(column.ControlType, "Text", StringComparison.Ordinal)
                         ? "Text"
                         : null);
             }
