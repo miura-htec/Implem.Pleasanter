@@ -1051,7 +1051,6 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
             {
                 case "TextBox": return ControlTypes.TextBox;
                 case "Id": return ControlTypes.Text;
-                case "Text": return ControlTypes.Text;
                 case "Slider": return ControlTypes.Slider;
                 case "Spinner": return ControlTypes.Spinner;
                 case "Attachments": return ControlTypes.Attachments;

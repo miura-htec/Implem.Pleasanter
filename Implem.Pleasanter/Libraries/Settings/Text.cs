@@ -6,15 +6,13 @@ namespace Implem.Pleasanter.Libraries.Settings
     {
         public int Id;
         public string LabelText;
-        public bool? Hide;
 
         public Text GetRecordingData(SiteSettings ss)
         {
             return new Text
             {
                 Id = Id,
-                LabelText = LabelText,
-                Hide = Hide
+                LabelText = LabelText
             };
         }
 
@@ -33,12 +31,10 @@ namespace Implem.Pleasanter.Libraries.Settings
 
         public void Update(
             int id,
-            string labelText,
-            bool? hide)
+            string labelText)
         {
             Id = id;
             if (labelText != null) LabelText = labelText;
-            if (hide != null) Hide = hide;
         }
     }
 }

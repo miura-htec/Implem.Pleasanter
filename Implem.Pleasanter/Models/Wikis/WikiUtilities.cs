@@ -1153,7 +1153,7 @@ namespace Implem.Pleasanter.Models
                     column: column,
                     preview: preview);
             }
-            else if (text?.Hide != true && text != null)
+            else if (text != null)
             {
                 hb.FieldStaticText(
                     fieldId: $"{columnName}Field",

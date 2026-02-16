@@ -4158,6 +4158,7 @@ namespace Implem.Pleasanter.Libraries.Settings
                             .Forms
                             .Data(key: "EditorColumnsTabsTarget"),
                         editorColumnsAll: context.Forms.List(propertyName));
+                    var currentSections = Sections;
                     Sections = EditorColumnHash
                         .SelectMany(o => o
                             .Value?
@@ -4166,20 +4167,21 @@ namespace Implem.Pleasanter.Libraries.Settings
                         .Select(sectionId => new Section
                         {
                             Id = sectionId,
-                            LabelText = Sections?
+                            LabelText = currentSections?
                                 .FirstOrDefault(section => section.Id == sectionId)
                                 ?.LabelText
                                     ?? Displays.Section(context: context),
-                            AllowExpand = Sections?
+                            AllowExpand = currentSections?
                                 .FirstOrDefault(section => section.Id == sectionId)
                                 ?.AllowExpand
                                     ?? false,
-                            Expand = Sections?
+                            Expand = currentSections?
                                 .FirstOrDefault(section => section.Id == sectionId)
                                 ?.Expand
                                     ?? true
                         })
                         .ToList();
+                    var currentTexts = Texts;
                     Texts = EditorColumnHash
                         .SelectMany(o => o
                             .Value?
@@ -4189,13 +4191,10 @@ namespace Implem.Pleasanter.Libraries.Settings
                         .Select(textId => new Text
                         {
                             Id = textId,
-                            LabelText = Texts?
+                            LabelText = currentTexts?
                                 .FirstOrDefault(text => text.Id == textId)
                                 ?.LabelText
-                                    ?? Displays.Get(context: context, id: "Text"),
-                            Hide = Texts?
-                                .FirstOrDefault(text => text.Id == textId)
-                                ?.Hide
+                                    ?? Displays.Get(context: context, id: "Text")
                         })
                         .ToList();
                     break;

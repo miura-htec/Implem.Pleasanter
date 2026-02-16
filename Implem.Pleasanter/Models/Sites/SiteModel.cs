@@ -2735,8 +2735,7 @@ namespace Implem.Pleasanter.Models
                     {
                         currentText.Update(
                             id: text.Id,
-                            labelText: text.LabelText,
-                            hide: text.Hide);
+                            labelText: text.LabelText);
                     }
                     else
                     {

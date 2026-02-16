@@ -8,7 +8,6 @@ namespace Implem.Pleasanter.Models.ApiSiteSettings
     {
         public int Id;
         public string LabelText;
-        public bool? Hide;
 
         public TextApiSettingModel()
         {
@@ -19,8 +18,7 @@ namespace Implem.Pleasanter.Models.ApiSiteSettings
             return new Text
             {
                 Id = Id,
-                LabelText = LabelText,
-                Hide = Hide
+                LabelText = LabelText
             };
         }
     }
