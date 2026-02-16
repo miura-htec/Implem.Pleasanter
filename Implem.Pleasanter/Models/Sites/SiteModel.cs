@@ -2676,6 +2676,7 @@ namespace Implem.Pleasanter.Models
                     .Where(section => !apiSectionIds.Contains(section.Id))
                     .Select(section => section.Id)
                     .ToList();
+                var currentSectionIds = siteSetting.Sections?.Select(o => o.Id).ToList();
                 sectionsApiSiteSetting.ForEach(section => {
                     var currentSection = siteSetting.Sections?.FirstOrDefault(o =>
                      o.Id == section.Id);
