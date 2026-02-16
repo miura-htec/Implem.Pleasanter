@@ -591,21 +591,6 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
                                 extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
                                 extendedHtmlAfterControl: extendedHtmlAfterControl);
                         default:
-                            if (IsTextControl(ss: ss, column: column))
-                            {
-                                return FieldTextLabel(
-                                    hb: hb,
-                                    fieldId: controlId + "Field",
-                                    fieldDescription: fieldDescription,
-                                    fieldCss: fieldCss,
-                                    labelCss: labelCss,
-                                    labelText: labelText,
-                                    labelRaw: labelRaw,
-                                    controlContainerCss: controlContainerCss,
-                                    extendedHtmlBeforeLabel: extendedHtmlBeforeLabel,
-                                    extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
-                                    extendedHtmlAfterControl: extendedHtmlAfterControl);
-                            }
                             var dataRaw = column.TypeName.CsTypeSummary() == Types.CsNumeric
                                 ? rawValue?.ToString() ?? (column.Nullable == true ? "" : "0")
                                 : null;
@@ -712,21 +697,6 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
                                 extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
                                 extendedHtmlAfterControl: extendedHtmlAfterControl);
                         case ControlTypes.Text:
-                            if (IsTextControl(ss: ss, column: column))
-                            {
-                                return FieldTextLabel(
-                                    hb: hb,
-                                    fieldId: controlId + "Field",
-                                    fieldDescription: fieldDescription,
-                                    fieldCss: fieldCss,
-                                    labelCss: labelCss,
-                                    labelText: labelText,
-                                    labelRaw: labelRaw,
-                                    controlContainerCss: controlContainerCss,
-                                    extendedHtmlBeforeLabel: extendedHtmlBeforeLabel,
-                                    extendedHtmlBetweenLabelAndControl: extendedHtmlBetweenLabelAndControl,
-                                    extendedHtmlAfterControl: extendedHtmlAfterControl);
-                            }
                             return hb.FieldText(
                                 fieldId: controlId + "Field",
                                 controlId: controlId,
@@ -1105,33 +1075,18 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
             }
         }
 
-        private static bool IsTextControl(SiteSettings ss, Column column)
-        {
-            if (string.Equals(column?.ControlType, "Text", StringComparison.Ordinal))
-            {
-                return true;
-            }
-            var columnName = column?.ColumnName;
-            if (columnName.IsNullOrEmpty() || ss?.ColumnHash == null)
-            {
-                return false;
-            }
-            var siteColumn = ss.ColumnHash.Get(columnName);
-            return string.Equals(siteColumn?.ControlType, "Text", StringComparison.Ordinal);
-        }
-
-        private static HtmlBuilder FieldTextLabel(
-            HtmlBuilder hb,
+        public static HtmlBuilder FieldStaticText(
+            this HtmlBuilder hb,
             string fieldId,
-            string fieldDescription,
-            string fieldCss,
-            string labelCss,
             string labelText,
-            string labelRaw,
-            string controlContainerCss,
-            string extendedHtmlBeforeLabel,
-            string extendedHtmlBetweenLabelAndControl,
-            string extendedHtmlAfterControl)
+            string fieldDescription = null,
+            string fieldCss = null,
+            string labelCss = null,
+            string labelRaw = null,
+            string controlContainerCss = null,
+            string extendedHtmlBeforeLabel = null,
+            string extendedHtmlBetweenLabelAndControl = null,
+            string extendedHtmlAfterControl = null)
         {
             return hb.Field(
                 fieldId: fieldId,

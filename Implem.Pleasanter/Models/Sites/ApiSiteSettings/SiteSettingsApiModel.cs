@@ -19,6 +19,8 @@ namespace Implem.Pleasanter.Models.ApiSiteSettings
         public List<string> FilterColumns;
         public int? SectionLatestId;
         public List<SectionApiSettingModel> Sections { get; set; }
+        public int? TextLatestId;
+        public List<TextApiSettingModel> Texts { get; set; }
         public List<LinkApiSettingModel> Links;
         public string Timestamp;
 

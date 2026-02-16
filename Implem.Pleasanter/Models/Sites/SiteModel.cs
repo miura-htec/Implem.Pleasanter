@@ -2676,7 +2676,6 @@ namespace Implem.Pleasanter.Models
                     .Where(section => !apiSectionIds.Contains(section.Id))
                     .Select(section => section.Id)
                     .ToList();
-                var currentSectionIds = siteSetting.Sections?.Select(o => o.Id).ToList();
                 sectionsApiSiteSetting.ForEach(section => {
                     var currentSection = siteSetting.Sections?.FirstOrDefault(o =>
                      o.Id == section.Id);
@@ -2703,6 +2702,56 @@ namespace Implem.Pleasanter.Models
                     if (deleteSections.Count() != 0)
                     {
                         siteSetting.Sections.RemoveAll(section => deleteSections.Contains(section.Id));
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fixed:
+        /// </summary>
+        public void UpsertTextsByApi(
+           SiteSettings siteSetting,
+           int? textLatestId,
+           List<ApiSiteSettings.TextApiSettingModel> textsApiSiteSetting)
+        {
+            if (textLatestId != 0)
+            {
+                siteSetting.TextLatestId = textLatestId;
+            }
+            List<int> deleteTexts = new List<int>();
+            if (textsApiSiteSetting != null)
+            {
+                var apiTextIds = textsApiSiteSetting.Select(text => text.Id).ToList();
+                deleteTexts = siteSetting.Texts?
+                    .Where(text => !apiTextIds.Contains(text.Id))
+                    .Select(text => text.Id)
+                    .ToList();
+                textsApiSiteSetting.ForEach(text =>
+                {
+                    var currentText = siteSetting.Texts?.FirstOrDefault(o =>
+                     o.Id == text.Id);
+                    if (currentText != null)
+                    {
+                        currentText.Update(
+                            id: text.Id,
+                            labelText: text.LabelText,
+                            hide: text.Hide);
+                    }
+                    else
+                    {
+                        if (siteSetting.Texts == null)
+                        {
+                            siteSetting.Texts = new List<Text>();
+                        }
+                        siteSetting.Texts.Add(text.GetRecordingData(siteSetting));
+                    }
+                });
+                if (deleteTexts != null)
+                {
+                    if (deleteTexts.Count() != 0)
+                    {
+                        siteSetting.Texts.RemoveAll(text => deleteTexts.Contains(text.Id));
                     }
                 }
             }
@@ -3246,6 +3295,11 @@ namespace Implem.Pleasanter.Models
                     break;
                 case "UpdateSection":
                     UpdateSection(
+                        context: context,
+                        res: res);
+                    break;
+                case "UpdateText":
+                    UpdateText(
                         context: context,
                         res: res);
                     break;
@@ -4405,8 +4459,10 @@ namespace Implem.Pleasanter.Models
                     columnName: selectedColumns.FirstOrDefault());
                 var section = SiteSettings.Sections.Get(SiteSettings.SectionId(selectedColumns
                     .FirstOrDefault()));
+                var text = SiteSettings.Texts.Get(SiteSettings.TextId(selectedColumns
+                    .FirstOrDefault()));
                 var linkId = SiteSettings.LinkId(selectedColumns.FirstOrDefault());
-                if (column == null && section == null && linkId == 0)
+                if (column == null && section == null && text == null && linkId == 0)
                 {
                     res.Message(Messages.InvalidRequest(context: context));
                 }
@@ -4437,6 +4493,14 @@ namespace Implem.Pleasanter.Models
                             ss: SiteSettings,
                             controlId: context.Forms.ControlId(),
                             section: section));
+                    }
+                    else if (text != null)
+                    {
+                        res.Html("#EditorColumnDialog", SiteUtilities.TextDialog(
+                            context: context,
+                            ss: SiteSettings,
+                            controlId: context.Forms.ControlId(),
+                            text: text));
                     }
                     else if (linkId != 0)
                     {
@@ -4829,28 +4893,12 @@ namespace Implem.Pleasanter.Models
                                 selectedValueTextCollection: new List<string> { sectionName },
                                 setMaterialSymbols: context.ThemeVersionOver2_0()));
                     }
-                    else if (sourceColumn == "Text")
+                    else if (sourceColumn?.StartsWith("_Text-") == true)
                     {
-                        var textColumnName = SiteSettings
-                            .EditorSelectableOptions(
-                                context: context,
-                                enabled: false)
-                            ?.Keys
-                            .FirstOrDefault(columnName => columnName.StartsWith("Description"));
-                        var textColumn = SiteSettings.GetColumn(
-                            context: context,
-                            columnName: textColumnName);
-                        if (textColumnName.IsNullOrEmpty() || textColumn == null)
+                        var textName = SiteSettings.TextName(SiteSettings.AddText(new Text
                         {
-                            res.Message(Messages.CanNotPerformed(context: context));
-                            break;
-                        }
-                        textColumn.ControlType = "Text";
-                        textColumn.LabelText = Displays.Get(context: context, id: "Text");
-                        textColumn.FieldCss = string.Empty;
-                        textColumn.DefaultInput = string.Empty;
-                        textColumn.ValidateRequired = false;
-                        textColumn.EditorReadOnly = true;
+                            LabelText = Displays.Get(context: context, id: "Text")
+                        }).Id);
                         var tab = SiteSettings
                             .EditorColumnHash
                             .Get(SiteSettings.TabName(context.Forms.Int("EditorColumnsTabsTarget")));
@@ -4864,7 +4912,7 @@ namespace Implem.Pleasanter.Models
                                     .Int("EditorColumnsTabsTarget")
                                     .ToStr());
                         }
-                        tab.Add(textColumnName);
+                        tab.Add(textName);
                         res.Html(
                             "#EditorColumns",
                             new HtmlBuilder().SelectableItems(
@@ -4872,7 +4920,7 @@ namespace Implem.Pleasanter.Models
                                     .EditorSelectableOptions(
                                         context: context,
                                         tabId: context.Forms.Int("EditorColumnsTabs")),
-                                selectedValueTextCollection: new List<string> { textColumnName },
+                                selectedValueTextCollection: new List<string> { textName },
                                 setMaterialSymbols: context.ThemeVersionOver2_0()));
                     }
                     break;
@@ -4908,6 +4956,41 @@ namespace Implem.Pleasanter.Models
                                         .Where(o => o
                                             .Value?
                                             .Contains(sectionName) == true)
+                                        .Select(o => o.Key)
+                                        .FirstOrDefault()))))
+                    .CloseDialog();
+            }
+        }
+
+        /// <summary>
+        /// Fixed:
+        /// </summary>
+        private void UpdateText(Context context, ResponseCollection res)
+        {
+            var selected = context.Forms.Int("TextId");
+            var text = SiteSettings.Texts.Get(selected);
+            var textName = SiteSettings.TextName(text?.Id);
+            if (text == null)
+            {
+                res.Message(Messages.NotFound(context: context));
+            }
+            else
+            {
+                text.SetByForm(
+                    context: context,
+                    ss: SiteSettings);
+                res.Html(
+                    "#EditorColumns",
+                    new HtmlBuilder().SelectableItems(
+                        listItemCollection: SiteSettings
+                            .EditorSelectableOptions(
+                                context: context,
+                                tabId: SiteSettings
+                                    .TabId(SiteSettings
+                                        .EditorColumnHash
+                                        .Where(o => o
+                                            .Value?
+                                            .Contains(textName) == true)
                                         .Select(o => o.Key)
                                         .FirstOrDefault()))))
                     .CloseDialog();

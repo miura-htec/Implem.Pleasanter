@@ -216,6 +216,8 @@ namespace Implem.Pleasanter.Models.ApiSiteSettings
             if (ss.Links != null) SiteSettings.Links = ss.Links;
             if (ss.SectionLatestId != null) SiteSettings.SectionLatestId = ss.SectionLatestId;
             SiteSettings.Sections = ss.Sections != null ? ss.Sections : new List<Section>();
+            if (ss.TextLatestId != null) SiteSettings.TextLatestId = ss.TextLatestId;
+            SiteSettings.Texts = ss.Texts != null ? ss.Texts : new List<Text>();
             if (ss.Columns != null) SiteSettings.Columns = ss.Columns.Where(o => editorColumnList.Contains(o.ColumnName) || DefaultColumns.Contains(o.ColumnName)).ToList();
         }
 

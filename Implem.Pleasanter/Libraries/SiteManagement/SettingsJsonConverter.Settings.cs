@@ -2035,6 +2035,15 @@ namespace Implem.Pleasanter.Libraries.SiteManagement
                                 : Displays.Close(context: context);
                             return dst;
                         }
+                        else if (columnName.StartsWith("_Text-"))
+                        {
+                            var dst = new ListColumn();
+                            var text = ss.Texts?
+                                .Where(v => v.Id == ss.TextId(columnName: columnName))
+                                .FirstOrDefault();
+                            dst.LabelText = text?.LabelText;
+                            return dst;
+                        }
                         else if (columnName.StartsWith("_Links-"))
                         {
                             var dst = new ListColumn();

@@ -2517,6 +2517,13 @@ namespace Implem.Pleasanter.Models
                     sectionLatestId: siteSettingsApiModel.SectionLatestId,
                     sectionsApiSiteSetting: siteSettingsApiModel.Sections);
             }
+            if (siteSettingsApiModel.Texts != null)
+            {
+                siteModel.UpsertTextsByApi(
+                    siteSetting: ss,
+                    textLatestId: siteSettingsApiModel.TextLatestId,
+                    textsApiSiteSetting: siteSettingsApiModel.Texts);
+            }
             var errorData = siteModel.Update(
                context: context,
                ss: ss,
@@ -7390,11 +7397,6 @@ namespace Implem.Pleasanter.Models
                 method: "post");
         }
 
-        private static bool IsTextControlType(string controlType)
-        {
-            return string.Equals(controlType, "Text", StringComparison.Ordinal);
-        }
-
         /// <summary>
         /// Fixed:
         /// </summary>
@@ -7402,7 +7404,6 @@ namespace Implem.Pleasanter.Models
             Context context, SiteSettings ss, Column column, IEnumerable<string> titleColumns)
         {
             var hb = new HtmlBuilder();
-            var isTextControl = IsTextControlType(controlType: column.ControlType);
             if (column.TypeName == "nvarchar"
                 && column.ControlType != "Attachments")
             {
@@ -7428,30 +7429,26 @@ namespace Implem.Pleasanter.Models
                                         .A(
                                             href: "#AutoNumberingSettingTab",
                                             text: Displays.AutoNumbering(context: context)),
-                                    _using: column.AutoNumberingColumn()
-                                        && !isTextControl)
+                                    _using: column.AutoNumberingColumn())
                                 .Li(
                                     action: () => hb
                                         .A(
                                             href: "#EditorDetailsettingTab",
                                             text: Displays.ValidateInput(context: context)),
-                                    _using: !column.OtherColumn()
-                                        && !isTextControl)
+                                    _using: !column.OtherColumn())
                                 .Li(
                                     action: () => hb
                                         .A(
                                             href: "#ExtendedHtmlSettingTab",
                                             text: Displays.ExtendedHtml(context: context)),
                                     _using: !column.OtherColumn()
-                                        && column.ColumnName != "Comments"
-                                        && !isTextControl)
+                                        && column.ColumnName != "Comments")
                                 .Li(
                                     action: () => hb
                                         .A(
                                             href: "#MultilingualSettingTab",
                                             text: Displays.Multilingual(context: context)),
-                                    _using: !column.OtherColumn()
-                                        && !isTextControl))
+                                    _using: !column.OtherColumn()))
                         .EditorColumnDialogTab(
                             context: context,
                             ss: ss,
@@ -7590,10 +7587,6 @@ namespace Implem.Pleasanter.Models
             SiteSettings ss,
             Column column)
         {
-            if (IsTextControlType(controlType: column.ControlType))
-            {
-                return hb;
-            }
             if (!column.AutoNumberingColumn())
             {
                 return hb;
@@ -7660,10 +7653,6 @@ namespace Implem.Pleasanter.Models
             Context context,
             SiteSettings ss)
         {
-            if (IsTextControlType(controlType: column.ControlType))
-            {
-                return hb;
-            }
             if (column.OtherColumn() || column.ColumnName == "Comments")
             {
                 return hb;
@@ -7716,10 +7705,6 @@ namespace Implem.Pleasanter.Models
             Context context,
             SiteSettings ss)
         {
-            if (IsTextControlType(controlType: column.ControlType))
-            {
-                return hb;
-            }
             if (column.OtherColumn())
             {
                 return hb;
@@ -7748,10 +7733,6 @@ namespace Implem.Pleasanter.Models
         public static HtmlBuilder EditorDetailsettingTab(
             this HtmlBuilder hb, Column column, Context context, SiteSettings ss)
         {
-            if (IsTextControlType(controlType: column.ControlType))
-            {
-                return hb;
-            }
             if (column.OtherColumn())
             {
                 return hb;
@@ -7794,7 +7775,6 @@ namespace Implem.Pleasanter.Models
             IEnumerable<string> titleColumns)
         {
             var type = column.TypeName.CsTypeSummary();
-            var isTextControl = IsTextControlType(controlType: column.ControlType);
             return hb.TabsPanelField(
                 id: "EditorColumnDialogTab",
                 action: () => hb
@@ -7805,21 +7785,10 @@ namespace Implem.Pleasanter.Models
                         {
                             hb
                                 .FieldTextBox(
-                                    textType: isTextControl
-                                        ? HtmlTypes.TextTypes.MultiLine
-                                        : HtmlTypes.TextTypes.Normal,
-                                    fieldCss: isTextControl
-                                        ? "field-wide"
-                                        : null,
                                     controlId: "LabelText",
                                     labelText: Displays.DisplayName(context: context),
                                     text: column.LabelText,
-                                    validateRequired: true);
-                            if (isTextControl)
-                            {
-                                return;
-                            }
-                            hb
+                                    validateRequired: true)
                                 .FieldDropDown(
                                     context: context,
                                     controlId: "TextAlign",
@@ -8663,7 +8632,7 @@ namespace Implem.Pleasanter.Models
                                 listItemCollection: new Dictionary<string, ControlData>
                                 {
                                     {
-                                        "Text",
+                                        "_Text-0",
                                         new ControlData(Displays.Get(
                                             context: context,
                                             id: "Text"))
@@ -8834,6 +8803,53 @@ namespace Implem.Pleasanter.Models
                         .Div(css: "command-center", action: () => hb
                             .Button(
                                 controlId: "UpdateSection",
+                                text: Displays.Change(context: context),
+                                controlCss: "button-icon validate button-positive",
+                                onClick: "$p.send($(this));",
+                                icon: "ui-icon-disk",
+                                action: "SetSiteSettings",
+                                method: "post")
+                            .Button(
+                                text: Displays.Cancel(context: context),
+                                controlCss: "button-icon button-neutral",
+                                onClick: "$p.closeDialog($(this));",
+                                icon: "ui-icon-cancel")));
+        }
+
+        /// <summary>
+        /// Fixed:
+        /// </summary>
+        public static HtmlBuilder TextDialog(
+            Context context,
+            SiteSettings ss,
+            string controlId,
+            Text text)
+        {
+            var hb = new HtmlBuilder();
+            return hb.Form(
+                attributes: new HtmlAttributes().Id("TextForm").Action(Locations.ItemAction(
+                    context: context,
+                    id: ss.SiteId)),
+                action: () => hb.FieldSet(
+                    css: " enclosed",
+                    legendText: Displays.Get(context: context, id: "Text"),
+                    action: () => hb
+                        .Hidden(
+                            controlId: "TextId",
+                            css: " always-send",
+                            value: text.Id.ToString())
+                        .FieldTextBox(
+                            textType: HtmlTypes.TextTypes.MultiLine,
+                            controlId: "LabelText",
+                            controlCss: " always-send",
+                            fieldCss: "field-wide",
+                            labelText: Displays.DisplayName(context: context),
+                            text: text.LabelText,
+                            validateRequired: true))
+                        .P(css: "message-dialog")
+                        .Div(css: "command-center", action: () => hb
+                            .Button(
+                                controlId: "UpdateText",
                                 text: Displays.Change(context: context),
                                 controlCss: "button-icon validate button-positive",
                                 onClick: "$p.send($(this));",

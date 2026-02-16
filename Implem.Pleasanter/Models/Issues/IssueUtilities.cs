@@ -2233,6 +2233,7 @@ namespace Implem.Pleasanter.Models
             var column = ss.GetColumn(
                 context: context,
                 columnName: columnName);
+            var text = ss.Texts?.FirstOrDefault(o => o.Id == ss.TextId(columnName));
             var linkId = !preview && !editInDialog ? ss.LinkId(columnName) : 0;
             if (column != null)
             {
@@ -2242,6 +2243,12 @@ namespace Implem.Pleasanter.Models
                     issueModel: issueModel,
                     column: column,
                     preview: preview);
+            }
+            else if (text?.Hide != true && text != null)
+            {
+                hb.FieldStaticText(
+                    fieldId: $"{columnName}Field",
+                    labelText: text.LabelText);
             }
             else if (!editInDialog && linkId != 0)
             {

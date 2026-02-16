@@ -258,21 +258,21 @@ namespace Implem.Pleasanter.Libraries.Settings
                 return new ControlData(
                     text: $"[{ss.Title}] {labelText}",
                     title: labelTextDefault,
-                    order: order,
-                    iconKey: string.Equals(column.ControlType, "Text", StringComparison.Ordinal)
-                        ? "Text"
-                        : null);
+                    order: order);
             }
             else
             {
                 var linkId = ss.LinkId(columnName);
                 var sectionId = ss.SectionId(columnName);
+                var textId = ss.TextId(columnName);
                 return new ControlData(linkId > 0
                     ? ss.Sources.Get(linkId)?.Title
                         ?? ss.Destinations.Get(linkId)?.Title
                         ?? string.Empty
                     : sectionId > 0
-                        ? ss.Sections.FirstOrDefault(o => o.Id == sectionId)?.LabelText
+                        ? ss.Sections?.FirstOrDefault(o => o.Id == sectionId)?.LabelText
+                        : textId > 0
+                            ? ss.Texts?.FirstOrDefault(o => o.Id == textId)?.LabelText
                         : string.Empty);
             }
         }
