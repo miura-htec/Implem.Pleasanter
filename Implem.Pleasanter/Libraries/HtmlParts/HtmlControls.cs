@@ -1177,7 +1177,7 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
             var iconTypesMap = new Dictionary<string, string>
             {
                 ["basic"] = "apps",
-                ["class"] = "text_fields",
+                ["class"] = "sell",
                 ["num"] = "timer_10",
                 ["date"] = "calendar_month",
                 ["description"] = "edit_note",
