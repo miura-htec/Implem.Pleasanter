@@ -134,6 +134,7 @@ $p.bindGanttDirectManipulation = function () {
         var dragging = state.dragging;
         state.dragging = null;
         $(document).off('.gantt-resize-drag');
+        $('body').removeClass('gantt-resize-active');
         $('.gantt-resize-handle.active').removeClass('active');
         if (dragging.changed) {
             setPendingChange(dragging.task);
@@ -161,6 +162,16 @@ $p.bindGanttDirectManipulation = function () {
         if (side !== 'left' && side !== 'right') {
             return;
         }
+        if (event.cancelable) {
+            event.preventDefault();
+        }
+        if (window.getSelection) {
+            var selection = window.getSelection();
+            if (selection && selection.removeAllRanges) {
+                selection.removeAllRanges();
+            }
+        }
+        $('body').addClass('gantt-resize-active');
         state.dragging = {
             side: side,
             task: task,
@@ -180,6 +191,12 @@ $p.bindGanttDirectManipulation = function () {
             var movedDays = Math.round((clientX(moveOriginal) - state.dragging.startX) / state.dayWidth);
             if (state.dragging.movedDays === movedDays) {
                 return;
+            }
+            if (window.getSelection) {
+                var currentSelection = window.getSelection();
+                if (currentSelection && currentSelection.removeAllRanges) {
+                    currentSelection.removeAllRanges();
+                }
             }
 
             var dragTask = state.dragging.task;

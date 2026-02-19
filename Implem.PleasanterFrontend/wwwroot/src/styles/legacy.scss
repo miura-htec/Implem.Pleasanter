@@ -1020,11 +1020,18 @@ th.calendar-header {
 #Gantt .gantt-resize-handle {
     cursor: ew-resize;
     fill: rgba(0, 0, 0, 0.001);
+    touch-action: none;
 }
 
 #Gantt .gantt-resize-handle:hover,
 #Gantt .gantt-resize-handle.active {
     fill: rgba(0, 0, 0, 0.12);
+}
+
+body.gantt-resize-active,
+body.gantt-resize-active * {
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 #GanttPreviousButton {
