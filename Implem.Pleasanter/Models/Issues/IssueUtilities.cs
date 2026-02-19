@@ -8870,6 +8870,78 @@ namespace Implem.Pleasanter.Models
                     : null);
         }
 
+        private class GanttChange
+        {
+            public long Id { get; set; }
+            public string StartTime { get; set; }
+            public string CompletionTime { get; set; }
+        }
+
+        public static string UpdateByGantt(Context context, SiteSettings ss)
+        {
+            if (!ss.EnableViewMode(context: context, name: "Gantt"))
+            {
+                return Messages.ResponseHasNotPermission(context: context).ToJson();
+            }
+            var changes = context.Forms
+                .Data("GanttChanges")
+                .Deserialize<List<GanttChange>>()?
+                .Where(o => o != null && o.Id > 0)
+                .GroupBy(o => o.Id)
+                .Select(o => o.Last())
+                .ToList()
+                    ?? new List<GanttChange>();
+            var updatedCount = 0;
+            foreach (var change in changes)
+            {
+                var formData = new Forms
+                {
+                    { "Id", change.Id.ToString() },
+                    { "Issues_StartTime", change.StartTime ?? string.Empty },
+                    { "Issues_CompletionTime", change.CompletionTime ?? string.Empty }
+                };
+                var issueModel = new IssueModel(
+                    context: context,
+                    ss: ss,
+                    issueId: change.Id,
+                    formData: formData);
+                var invalid = IssueValidators.OnUpdating(
+                    context: context,
+                    ss: ss,
+                    issueModel: issueModel);
+                switch (invalid.Type)
+                {
+                    case Error.Types.None: break;
+                    default: return invalid.MessageJson(context: context);
+                }
+                if (issueModel.AccessStatus != Databases.AccessStatuses.Selected)
+                {
+                    return Messages.ResponseDeleteConflicts(context: context).ToJson();
+                }
+                if (!issueModel.Updated(context: context))
+                {
+                    continue;
+                }
+                issueModel.VerUp = Versions.MustVerUp(
+                    context: context,
+                    ss: ss,
+                    baseModel: issueModel);
+                issueModel.Update(
+                    context: context,
+                    ss: ss,
+                    notice: true);
+                updatedCount++;
+            }
+            return GanttJson(
+                context: context,
+                ss: ss,
+                message: updatedCount > 0
+                    ? Messages.UpdatedByGrid(
+                        context: context,
+                        data: updatedCount.ToString())
+                    : null);
+        }
+
         public static string CalendarJson(
             Context context,
             SiteSettings ss,
@@ -9625,7 +9697,10 @@ namespace Implem.Pleasanter.Models
                         inRange: inRange));
         }
 
-        public static string GanttJson(Context context, SiteSettings ss)
+        public static string GanttJson(
+            Context context,
+            SiteSettings ss,
+            Message message = null)
         {
             if (!ss.EnableViewMode(context: context, name: "Gantt"))
             {
@@ -9674,6 +9749,7 @@ namespace Implem.Pleasanter.Models
                         bodyOnly: bodyOnly,
                         bodySelector: "#GanttBody",
                         body: body)
+                    .Message(message)
                     .Events("on_gantt_load")
                     .ToJson();
             }
@@ -9702,6 +9778,7 @@ namespace Implem.Pleasanter.Models
                         bodyOnly: bodyOnly,
                         bodySelector: "#GanttBody",
                         body: body)
+                    .Message(message)
                     .Events("on_gantt_load")
                     .ToJson();
             }
