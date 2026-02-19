@@ -26,7 +26,7 @@ $p.saveGanttChanges = function ($button) {
         return state.pendingChanges[id];
     }));
 
-    var result = $p.syncSend($targetButton);
+    $p.syncSend($targetButton);
     state.saving = false;
     $p.updateGanttSaveButton();
 }
@@ -67,6 +67,15 @@ $p.bindGanttDirectManipulation = function () {
     };
     var formatDate = function (date) {
         return moment(date).format(state.formatUpper);
+    };
+    var clearSelection = function () {
+        if (!window.getSelection) {
+            return;
+        }
+        var selection = window.getSelection();
+        if (selection && selection.removeAllRanges) {
+            selection.removeAllRanges();
+        }
     };
     var earnedClass = function (task, width) {
         if (task.ProgressRate < 100
@@ -165,12 +174,7 @@ $p.bindGanttDirectManipulation = function () {
         if (event.cancelable) {
             event.preventDefault();
         }
-        if (window.getSelection) {
-            var selection = window.getSelection();
-            if (selection && selection.removeAllRanges) {
-                selection.removeAllRanges();
-            }
-        }
+        clearSelection();
         $('body').addClass('gantt-resize-active');
         state.dragging = {
             side: side,
@@ -192,12 +196,7 @@ $p.bindGanttDirectManipulation = function () {
             if (state.dragging.movedDays === movedDays) {
                 return;
             }
-            if (window.getSelection) {
-                var currentSelection = window.getSelection();
-                if (currentSelection && currentSelection.removeAllRanges) {
-                    currentSelection.removeAllRanges();
-                }
-            }
+            clearSelection();
 
             var dragTask = state.dragging.task;
             if (state.dragging.side === 'left') {
