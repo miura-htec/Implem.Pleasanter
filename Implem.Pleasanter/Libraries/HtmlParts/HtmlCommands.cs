@@ -333,7 +333,39 @@ namespace Implem.Pleasanter.Libraries.HtmlParts
                                 {
                                     switch (context.Action)
                                     {
+                                        case "gantt":
+                                        case "updatebygantt":
+                                            hb.Button(
+                                                serverScriptModelRow: serverScriptModelRow,
+                                                commandDisplayTypes: null,
+                                                controlId: "UpdateByGanttCommand",
+                                                text: Displays.Update(context: context),
+                                                controlCss: "button-icon validate button-positive",
+                                                accessKey: "s",
+                                                onClick: "$p.saveGanttChanges($(this));",
+                                                icon: "ui-icon-disk",
+                                                action: "UpdateByGantt",
+                                                method: "post",
+                                                _using: context.CanUpdate(ss: ss)
+                                                    && !readOnly);
+                                            break;
                                         case "index":
+                                            hb.Button(
+                                                serverScriptModelRow: serverScriptModelRow,
+                                                commandDisplayTypes: null,
+                                                controlId: "UpdateByGanttCommand",
+                                                text: Displays.Update(context: context),
+                                                controlCss: "button-icon validate button-positive",
+                                                accessKey: "s",
+                                                onClick: "$p.saveGanttChanges($(this));",
+                                                icon: "ui-icon-disk",
+                                                action: "UpdateByGantt",
+                                                method: "post",
+                                                _using: ((Implem.Pleasanter.Libraries.Requests.ViewModes.GetSessionData(
+                                                        context: context,
+                                                        siteId: ss.SiteId) ?? string.Empty).ToLower() == "gantt")
+                                                    && context.CanUpdate(ss: ss)
+                                                    && !readOnly);
                                             var bulkProcessingItems = ss.BulkProcessingItems(
                                                 context: context,
                                                 ss: ss);

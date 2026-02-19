@@ -1025,6 +1025,16 @@ th.calendar-header {
     cursor: auto;
 }
 
+#Gantt .gantt-resize-handle {
+    cursor: ew-resize;
+    fill: rgba(0, 0, 0, 0.001);
+}
+
+#Gantt .gantt-resize-handle:hover,
+#Gantt .gantt-resize-handle.active {
+    fill: rgba(0, 0, 0, 0.12);
+}
+
 #GanttPreviousButton {
     margin-left: 10px;
 }

@@ -3072,6 +3072,24 @@ namespace Implem.Pleasanter.Models
             }
         }
 
+        public string UpdateByGantt(Context context)
+        {
+            SetSite(
+                context: context,
+                initSiteSettings: true,
+                setSiteIntegration: true,
+                setAllChoices: true);
+            switch (Site.ReferenceType)
+            {
+                case "Issues":
+                    return IssueUtilities.UpdateByGantt(
+                        context: context,
+                        ss: Site.SiteSettings);
+                default:
+                    return Messages.ResponseNotFound(context: context).ToJson();
+            }
+        }
+
         public string UpdateByKamban(Context context)
         {
             SetSite(

@@ -1612,7 +1612,7 @@ namespace Implem.Pleasanter.Models
                         .Class("main-form confirm-unload")
                         .Action(Locations.ItemAction(
                             context: context,
-                            id: issueModel.IssueId != 0 
+                            id: issueModel.IssueId != 0
                                 ? issueModel.IssueId
                                 : issueModel.SiteId)),
                     action: () => hb
@@ -1735,7 +1735,7 @@ namespace Implem.Pleasanter.Models
                             value: issueModel.SwitchTargets?.Join(),
                             _using: !context.Ajax)
                         .Hidden(
-                            controlId: "TriggerRelatingColumns_Editor", 
+                            controlId: "TriggerRelatingColumns_Editor",
                             value: Jsons.ToJson(ss.RelatingColumns))
                         .Hidden(
                             controlId: "NotReturnParentRecord",
@@ -4471,7 +4471,7 @@ namespace Implem.Pleasanter.Models
                         type: "Created");
                     issueModel.SetByAfterCreateServerScript(
                         context: context,
-                        ss: ss);                
+                        ss: ss);
                 }
                 else
                 {
@@ -4558,7 +4558,7 @@ namespace Implem.Pleasanter.Models
                 return Messages.NotFound(context: context).ToJson();
             }
             var processes = ss.Processes
-                ?.Where(o => o.Id == processId 
+                ?.Where(o => o.Id == processId
                 || (o.ExecutionType == Process.ExecutionTypes.AddedButtonOrCreateOrUpdate
                     && ((process.ExecutionType == Process.ExecutionTypes.CreateOrUpdate)
                     || ((process.ExecutionType ?? Process.ExecutionTypes.AddedButton) == Process.ExecutionTypes.AddedButton)
@@ -4985,9 +4985,9 @@ namespace Implem.Pleasanter.Models
             {
                 case Databases.AccessStatuses.Selected:
                     return UpdateByApi(
-                        context: context, 
-                        ss: ss, 
-                        issueId: issueModel.IssueId, 
+                        context: context,
+                        ss: ss,
+                        issueId: issueModel.IssueId,
                         previousTitle: previousTitle);
                 case Databases.AccessStatuses.NotFound:
                     return CreateByApi(context: context, ss: ss);
@@ -5212,7 +5212,7 @@ namespace Implem.Pleasanter.Models
                     return UpdateByServerScript(
                         context: context,
                         ss: ss,
-                        issueId: issueModel.IssueId, 
+                        issueId: issueModel.IssueId,
                         previousTitle: issueModel.Title.DisplayValue,
                         model: model);
                 case Databases.AccessStatuses.NotFound:
@@ -5269,7 +5269,7 @@ namespace Implem.Pleasanter.Models
             }
             var viewsDic = new Dictionary<long?, View>();
             if (api.Keys?.Count > 0)
-            { 
+            {
                 var errorData = new List<string>();
                 foreach (var (issueApiModel, index) in bulkUpsertModel.Data.Select((value, index) => (value, index)))
                 {
@@ -5318,7 +5318,7 @@ namespace Implem.Pleasanter.Models
                     recodeCount++;
                     exclusiveObj.Refresh();
                     View view;
-                    viewsDic.TryGetValue(index, out view); 
+                    viewsDic.TryGetValue(index, out view);
                     var issueModel = new IssueModel(
                         context: context,
                         ss: ss,
@@ -5853,8 +5853,8 @@ namespace Implem.Pleasanter.Models
                     attachments = dataRow
                         .Columns()
                         .Where(columnName => columnName.StartsWith("Attachments"))
-                        .SelectMany(columnName => 
-                            Jsons.Deserialize<IEnumerable<Attachment>>(dataRow.String(columnName)) 
+                        .SelectMany(columnName =>
+                            Jsons.Deserialize<IEnumerable<Attachment>>(dataRow.String(columnName))
                                 ?? Enumerable.Empty<Attachment>())
                         .Where(o => o != null)
                         .Select(o => o.Guid)
@@ -5909,7 +5909,7 @@ namespace Implem.Pleasanter.Models
             attachments.ForEach(o =>
             {
                 RestoreAttachments(context, o.issueId, o.attachments);
-            });    
+            });
             return count;
         }
 
@@ -6189,9 +6189,9 @@ namespace Implem.Pleasanter.Models
                     parts: new string[]
                     {
                         context.Controller,
-                        issueId.ToString() 
+                        issueId.ToString()
                             + (issueModel.VerType == Versions.VerTypes.History
-                                ? "?ver=" + context.Forms.Int("Ver") 
+                                ? "?ver=" + context.Forms.Int("Ver")
                                 : string.Empty)
                     }))
                 .ToJson();
@@ -7606,7 +7606,7 @@ namespace Implem.Pleasanter.Models
                     statusCode: 500,
                     message: Error.Types.ImportMax.Message(
                         context: context,
-                        data: Parameters.General.ImportMax.ToString()).Text)); 
+                        data: Parameters.General.ImportMax.ToString()).Text));
             }
             if (context.ContractSettings.ItemsLimit(
                 context: context,
@@ -7748,7 +7748,7 @@ namespace Implem.Pleasanter.Models
                                             ? Displays.Duplicated(
                                                 context: context,
                                                 data: duplicatedColumn?.LabelText)
-                                            : duplicatedColumn?.MessageWhenDuplicated); 
+                                            : duplicatedColumn?.MessageWhenDuplicated);
                                 case null:
                                 case Error.Types.UpdateConflicts:
                                     issueModel = new IssueModel(
@@ -7831,7 +7831,7 @@ namespace Implem.Pleasanter.Models
                                         ? Displays.Duplicated(
                                             context: context,
                                             data: duplicatedColumn?.LabelText)
-                                        : duplicatedColumn?.MessageWhenDuplicated);                                
+                                        : duplicatedColumn?.MessageWhenDuplicated);
                             default:
                                 return ApiResults.Error(
                                     context: context,
@@ -8727,6 +8727,78 @@ namespace Implem.Pleasanter.Models
                     : null);
         }
 
+        private class GanttChange
+        {
+            public long Id { get; set; }
+            public string StartTime { get; set; }
+            public string CompletionTime { get; set; }
+        }
+
+        public static string UpdateByGantt(Context context, SiteSettings ss)
+        {
+            if (!ss.EnableViewMode(context: context, name: "Gantt"))
+            {
+                return Messages.ResponseHasNotPermission(context: context).ToJson();
+            }
+            var changes = context.Forms
+                .Data("GanttChanges")
+                .Deserialize<List<GanttChange>>()?
+                .Where(o => o != null && o.Id > 0)
+                .GroupBy(o => o.Id)
+                .Select(o => o.Last())
+                .ToList()
+                    ?? new List<GanttChange>();
+            var updatedCount = 0;
+            foreach (var change in changes)
+            {
+                var formData = new Forms
+                {
+                    { "Id", change.Id.ToString() },
+                    { "Issues_StartTime", change.StartTime ?? string.Empty },
+                    { "Issues_CompletionTime", change.CompletionTime ?? string.Empty }
+                };
+                var issueModel = new IssueModel(
+                    context: context,
+                    ss: ss,
+                    issueId: change.Id,
+                    formData: formData);
+                var invalid = IssueValidators.OnUpdating(
+                    context: context,
+                    ss: ss,
+                    issueModel: issueModel);
+                switch (invalid.Type)
+                {
+                    case Error.Types.None: break;
+                    default: return invalid.MessageJson(context: context);
+                }
+                if (issueModel.AccessStatus != Databases.AccessStatuses.Selected)
+                {
+                    return Messages.ResponseDeleteConflicts(context: context).ToJson();
+                }
+                if (!issueModel.Updated(context: context))
+                {
+                    continue;
+                }
+                issueModel.VerUp = Versions.MustVerUp(
+                    context: context,
+                    ss: ss,
+                    baseModel: issueModel);
+                issueModel.Update(
+                    context: context,
+                    ss: ss,
+                    notice: true);
+                updatedCount++;
+            }
+            return GanttJson(
+                context: context,
+                ss: ss,
+                message: updatedCount > 0
+                    ? Messages.UpdatedByGrid(
+                        context: context,
+                        data: updatedCount.ToString())
+                    : null);
+        }
+
         public static string CalendarJson(
             Context context,
             SiteSettings ss,
@@ -8775,7 +8847,7 @@ namespace Implem.Pleasanter.Models
                 timePeriod: timePeriod,
                 view: view);
             var calendarViewType = view.GetCalendarViewType();
-            var dataRows = inRangeY 
+            var dataRows = inRangeY
                 ? CalendarDataRows(
                     context: context,
                     ss: ss,
@@ -9482,7 +9554,10 @@ namespace Implem.Pleasanter.Models
                         inRange: inRange));
         }
 
-        public static string GanttJson(Context context, SiteSettings ss)
+        public static string GanttJson(
+            Context context,
+            SiteSettings ss,
+            Message message = null)
         {
             if (!ss.EnableViewMode(context: context, name: "Gantt"))
             {
@@ -9528,6 +9603,7 @@ namespace Implem.Pleasanter.Models
                         ss: ss,
                         view: view,
                         invoke: "drawGantt",
+                        message: message,
                         bodyOnly: bodyOnly,
                         bodySelector: "#GanttBody",
                         body: body)
@@ -10547,7 +10623,7 @@ namespace Implem.Pleasanter.Models
         }
 
         private static IEnumerable<Libraries.ViewModes.KambanElement> KambanData(
-            Context context, 
+            Context context,
             SiteSettings ss,
             View view,
             Column groupByX,
@@ -10831,7 +10907,7 @@ namespace Implem.Pleasanter.Models
 
         private static HtmlBuilder ImageLib(
             this HtmlBuilder hb,
-            Context context, 
+            Context context,
             SiteSettings ss,
             View view,
             bool bodyOnly,
@@ -10952,7 +11028,7 @@ namespace Implem.Pleasanter.Models
                     return new ErrorData(type: Error.Types.None);
                 }
                 else
-                {    
+                {
                     lockedRecordWhere.Issues_Updator(
                         value: context.UserId,
                         _operator: "<>");
