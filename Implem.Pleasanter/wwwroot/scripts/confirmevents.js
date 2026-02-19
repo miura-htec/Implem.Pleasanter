@@ -18,7 +18,7 @@
             $p.setFormChanged($(this));
         });
     $(window).bind("beforeunload", function () {
-        if ($p.formChanged) {
+        if ($p.hasPendingChanges && $p.hasPendingChanges()) {
             return $p.display('ConfirmUnload');
         }
     });
