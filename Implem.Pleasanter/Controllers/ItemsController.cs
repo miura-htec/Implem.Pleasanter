@@ -49,7 +49,7 @@ namespace Implem.Pleasanter.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult DashboardPart(long id, string dashboardPartId)
         {
-            var context = new Context(); 
+            var context = new Context();
             var log = new SysLogModel(context: context);
             var json = new ItemModel(context: context, referenceId: id).DashboardPartJson(context: context, dashboardPartId: dashboardPartId);
             log.Finish(context: context, responseSize: json.Length);
@@ -1236,6 +1236,16 @@ namespace Implem.Pleasanter.Controllers
             var context = new Context();
             var log = new SysLogModel(context: context);
             var json = new ItemModel(context: context, referenceId: id).UpdateByCalendar(context: context);
+            log.Finish(context: context, responseSize: json.Length);
+            return json;
+        }
+
+        [HttpPost]
+        public string UpdateByGantt(long id)
+        {
+            var context = new Context();
+            var log = new SysLogModel(context: context);
+            var json = new ItemModel(context: context, referenceId: id).UpdateByGantt(context: context);
             log.Finish(context: context, responseSize: json.Length);
             return json;
         }
